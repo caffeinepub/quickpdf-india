@@ -47,6 +47,13 @@ export function ToolExperience({
 
   const errorDisplay = error ? formatToolError(error) : null;
 
+  // Reset error details toggle when error changes or when entering error state
+  useEffect(() => {
+    if (jobStatus === 'error') {
+      setShowErrorDetails(false);
+    }
+  }, [jobStatus, error?.message]);
+
   // Determine current step
   const getCurrentStep = (): 1 | 2 | 3 => {
     if (jobStatus === 'done') return 3;
@@ -74,7 +81,7 @@ export function ToolExperience({
   }, [selectedFiles.length, children, jobStatus]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Step Indicator */}
       {(selectedFiles.length > 0 || jobStatus !== 'idle') && jobStatus !== 'error' && (
         <ToolStepIndicator currentStep={getCurrentStep()} />
@@ -107,7 +114,7 @@ export function ToolExperience({
           <AdSlot variant="in-content" />
           <div
             ref={optionsRef}
-            className="rounded-lg border-2 border-[#22c55e]/20 bg-card p-6 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500"
+            className="rounded-lg border-2 border-[#22c55e]/20 bg-card p-4 shadow-sm animate-in fade-in slide-in-from-top-4 duration-500 sm:p-6"
           >
             {children}
           </div>
@@ -117,11 +124,11 @@ export function ToolExperience({
       {/* Processing Section */}
       {(jobStatus === 'uploading' || jobStatus === 'processing') && (
         <div className="space-y-4">
-          <div className="rounded-lg border border-border bg-card p-8 text-center">
+          <div className="rounded-lg border border-border bg-card p-6 text-center sm:p-8">
             <div className="mb-4 flex justify-center">
-              <Loader2 className="h-16 w-16 animate-spin text-[#22c55e]" />
+              <Loader2 className="h-12 w-12 animate-spin text-[#22c55e] sm:h-16 sm:w-16" />
             </div>
-            <h3 className="mb-2 text-lg font-semibold">
+            <h3 className="mb-2 text-base font-semibold sm:text-lg">
               {jobStatus === 'uploading' ? 'Uploading your file...' : 'Processing your file...'}
             </h3>
             <p className="mb-4 text-sm text-muted-foreground">
@@ -142,7 +149,7 @@ export function ToolExperience({
           <ToolResultDownload fileName={resultFile.name} fileBlob={resultFile.blob} />
           {onStartOver && (
             <div className="text-center">
-              <Button variant="outline" onClick={onStartOver}>
+              <Button variant="outline" onClick={onStartOver} className="w-full sm:w-auto">
                 Process Another File
               </Button>
             </div>
@@ -153,11 +160,11 @@ export function ToolExperience({
       {/* Error Section */}
       {jobStatus === 'error' && errorDisplay && (
         <div className="space-y-4">
-          <div className="rounded-lg border border-destructive bg-destructive/10 p-6">
+          <div className="rounded-lg border border-destructive bg-destructive/10 p-4 sm:p-6">
             <div className="mb-4 flex items-start gap-3">
-              <AlertCircle className="h-6 w-6 flex-shrink-0 text-destructive" />
-              <div className="flex-1">
-                <h3 className="mb-2 text-lg font-semibold text-destructive">
+              <AlertCircle className="h-5 w-5 flex-shrink-0 text-destructive sm:h-6 sm:w-6" />
+              <div className="flex-1 min-w-0">
+                <h3 className="mb-2 text-base font-semibold text-destructive sm:text-lg">
                   {errorDisplay.summary}
                 </h3>
                 <p className="text-sm text-foreground">
@@ -181,8 +188,8 @@ export function ToolExperience({
             </Button>
 
             {showErrorDetails && (
-              <div className="mt-4 rounded-md bg-muted p-4">
-                <pre className="whitespace-pre-wrap text-xs text-muted-foreground">
+              <div className="mt-4 rounded-md bg-muted p-3 sm:p-4">
+                <pre className="whitespace-pre-wrap break-words text-xs text-muted-foreground">
                   {errorDisplay.details}
                 </pre>
               </div>
@@ -191,7 +198,9 @@ export function ToolExperience({
 
           {onStartOver && (
             <div className="text-center">
-              <Button onClick={onStartOver}>Try Again</Button>
+              <Button onClick={onStartOver} className="w-full sm:w-auto">
+                Try Again
+              </Button>
             </div>
           )}
         </div>

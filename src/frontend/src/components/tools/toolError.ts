@@ -39,7 +39,7 @@ function getFriendlyErrorSummary(error: ToolError): string {
   const msg = error.message.toLowerCase();
 
   // Backend connection errors
-  if (msg.includes('backend connection not available')) {
+  if (msg.includes('backend connection not available') || msg.includes('backend service is not available')) {
     return 'Backend connection not available. Please refresh the page and try again.';
   }
 
@@ -52,7 +52,7 @@ function getFriendlyErrorSummary(error: ToolError): string {
     return error.message; // Already user-friendly
   }
 
-  if (msg.includes('only .docx files are supported')) {
+  if (msg.includes('only .doc') || msg.includes('only .docx')) {
     return error.message; // Already user-friendly
   }
 
@@ -103,12 +103,24 @@ function getFriendlyErrorSummary(error: ToolError): string {
   }
 
   if (error.toolId === 'word-to-pdf') {
-    if (msg.includes('conversion failed')) {
-      return 'Word to PDF conversion failed. Please check your file and try again.';
+    // LibreOffice conversion errors
+    if (msg.includes('conversion service is being updated')) {
+      return 'Conversion service is being updated. Please try again in a moment.';
     }
-    if (msg.includes('failed to convert')) {
+    if (msg.includes('conversion failed') || msg.includes('pdf conversion failed')) {
+      return 'PDF conversion failed. The document may contain unsupported features or be corrupted.';
+    }
+    if (msg.includes('empty response') || msg.includes('empty pdf')) {
+      return 'Conversion failed to produce a valid PDF. Please check your Word document and try again.';
+    }
+    if (msg.includes('invalid pdf') || msg.includes('returned invalid data')) {
+      return 'Conversion produced an invalid PDF. The document may contain unsupported features.';
+    }
+    if (msg.includes('failed to convert') || msg.includes('failed to encode')) {
       return 'Could not convert the Word document. The file may be corrupted or use unsupported features.';
     }
+    // Generic Word-to-PDF error
+    return 'Word to PDF conversion failed. Please try again with a different document.';
   }
 
   if (error.toolId === 'pdf-to-word') {

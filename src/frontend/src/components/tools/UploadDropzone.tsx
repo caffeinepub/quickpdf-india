@@ -178,14 +178,14 @@ export function UploadDropzone({
           </div>
           <div>
             <h3 className="mb-2 text-lg font-semibold">
-              {isDragging ? 'Drop your files here' : 'Drag & drop your files'}
+              {isDragging ? 'Drop your file here' : 'Drag & drop your file'}
             </h3>
             <p className="text-sm text-muted-foreground">
               or{' '}
               <label htmlFor={inputId} className="cursor-pointer font-medium text-[#22c55e] hover:underline">
                 browse
               </label>{' '}
-              to choose files
+              to choose a file
             </p>
           </div>
           <Button
@@ -193,12 +193,12 @@ export function UploadDropzone({
             className="bg-[#22c55e] text-white hover:bg-[#16a34a]"
           >
             <label htmlFor={inputId} className="cursor-pointer">
-              Select Files
+              <Upload className="mr-2 h-4 w-4" />
+              Select File
             </label>
           </Button>
           <p className="text-xs text-muted-foreground">
-            Max file size: {maxFileSizeMB}MB
-            {maxFiles > 1 && ` • Max ${maxFiles} files`}
+            Accepted: {acceptedFileTypes} • Max size: {maxFileSizeMB}MB
           </p>
         </div>
       </div>

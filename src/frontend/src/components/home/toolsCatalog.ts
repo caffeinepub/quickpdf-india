@@ -80,7 +80,7 @@ export const TOOLS_CATALOG: Tool[] = [
   {
     id: 'word-to-pdf',
     label: 'Word to PDF',
-    description: 'Convert Word documents to PDF format',
+    description: 'Convert Word documents (.doc, .docx) to PDF format',
     route: '/word-to-pdf',
     icon: FileText,
     category: 'conversion',

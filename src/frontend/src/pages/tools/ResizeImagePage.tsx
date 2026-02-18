@@ -16,6 +16,9 @@ const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 export default function ResizeImagePage() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [outputPreviewUrl, setOutputPreviewUrl] = useState<string | null>(null);
+  const [originalDimensions, setOriginalDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [outputDimensions, setOutputDimensions] = useState<{ width: number; height: number; size: number } | null>(null);
   const job = useToolJob();
 
   // Scroll to top on mount
@@ -23,7 +26,7 @@ export default function ResizeImagePage() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  // Create preview URL when file is selected
+  // Create preview URL and get dimensions when file is selected
   useEffect(() => {
     if (selectedFiles.length > 0) {
       // Revoke previous URL to prevent memory leaks
@@ -33,6 +36,13 @@ export default function ResizeImagePage() {
       
       const url = URL.createObjectURL(selectedFiles[0]);
       setPreviewUrl(url);
+      
+      // Load image to get dimensions
+      const img = new Image();
+      img.onload = () => {
+        setOriginalDimensions({ width: img.width, height: img.height });
+      };
+      img.src = url;
       
       // Cleanup on unmount or when file changes
       return () => {
@@ -44,8 +54,43 @@ export default function ResizeImagePage() {
         URL.revokeObjectURL(previewUrl);
       }
       setPreviewUrl(null);
+      setOriginalDimensions(null);
     }
   }, [selectedFiles]);
+
+  // Create output preview when processing completes
+  useEffect(() => {
+    if (job.resultFile) {
+      // Revoke previous output URL
+      if (outputPreviewUrl) {
+        URL.revokeObjectURL(outputPreviewUrl);
+      }
+      
+      const url = URL.createObjectURL(job.resultFile.blob);
+      setOutputPreviewUrl(url);
+      
+      // Load image to get output dimensions
+      const img = new Image();
+      img.onload = () => {
+        setOutputDimensions({ 
+          width: img.width, 
+          height: img.height,
+          size: job.resultFile!.blob.size 
+        });
+      };
+      img.src = url;
+      
+      return () => {
+        URL.revokeObjectURL(url);
+      };
+    } else {
+      if (outputPreviewUrl) {
+        URL.revokeObjectURL(outputPreviewUrl);
+      }
+      setOutputPreviewUrl(null);
+      setOutputDimensions(null);
+    }
+  }, [job.resultFile]);
 
   const validateFile = (file: File): string | null => {
     // Check if file exists
@@ -84,16 +129,24 @@ export default function ResizeImagePage() {
     }
 
     setSelectedFiles(files);
+    setOutputPreviewUrl(null);
+    setOutputDimensions(null);
     job.reset();
   };
 
   const handleRemoveFile = () => {
-    // Revoke object URL to prevent memory leak
+    // Revoke object URLs to prevent memory leak
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
     }
+    if (outputPreviewUrl) {
+      URL.revokeObjectURL(outputPreviewUrl);
+    }
     setSelectedFiles([]);
     setPreviewUrl(null);
+    setOutputPreviewUrl(null);
+    setOriginalDimensions(null);
+    setOutputDimensions(null);
     job.reset();
   };
 
@@ -129,8 +182,17 @@ export default function ResizeImagePage() {
         job.updateProgress(progress);
       });
 
-      const extension = selectedFiles[0].name.split('.').pop();
-      job.completeProcessing(`resized.${extension}`, resultBlob);
+      // Determine output extension based on mode and format
+      let extension = selectedFiles[0].name.split('.').pop() || 'jpg';
+      if (options.mode === 'target-size') {
+        // Target size mode uses JPEG for better compression
+        extension = 'jpg';
+      }
+      
+      const baseName = selectedFiles[0].name.replace(/\.[^/.]+$/, '');
+      const outputFileName = `${baseName}_resized.${extension}`;
+
+      job.completeProcessing(outputFileName, resultBlob);
     } catch (error) {
       job.setError(
         normalizeToolError(error, 'resize-image', 'processing')
@@ -139,12 +201,18 @@ export default function ResizeImagePage() {
   };
 
   const handleStartOver = () => {
-    // Revoke object URL to prevent memory leak
+    // Revoke object URLs to prevent memory leak
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
     }
+    if (outputPreviewUrl) {
+      URL.revokeObjectURL(outputPreviewUrl);
+    }
     setSelectedFiles([]);
     setPreviewUrl(null);
+    setOutputPreviewUrl(null);
+    setOriginalDimensions(null);
+    setOutputDimensions(null);
     job.reset();
   };
 
@@ -160,20 +228,30 @@ export default function ResizeImagePage() {
     {
       question: 'How do I resize an image to a specific KB size?',
       answer:
-        'Use the "Target Size" option and enter your desired file size in KB. Our tool will automatically compress the image to meet that size.',
+        'Use the "Target Size" option and enter your desired file size in KB or MB. Our tool will automatically compress the image to meet that size with a ±5% tolerance.',
     },
     {
       question: 'Will resizing affect image quality?',
       answer:
-        'Some quality loss may occur when significantly reducing size. We use smart compression to maintain the best quality possible.',
+        'Some quality loss may occur when significantly reducing size. Use the quality selector (Low/Medium/High) to control the balance between file size and quality.',
     },
     {
       question: 'Can I resize multiple images at once?',
       answer: 'Currently, you can resize one image at a time for the best results.',
     },
+    {
+      question: 'What does "maintain aspect ratio" mean?',
+      answer: 'When enabled, the image proportions stay the same, preventing distortion. If you enter a width, the height is calculated automatically to keep the original shape.',
+    },
   ];
 
   const isProcessing = job.jobStatus === 'processing' || job.jobStatus === 'uploading';
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  };
 
   return (
     <>
@@ -207,20 +285,25 @@ export default function ResizeImagePage() {
           >
             {selectedFiles.length > 0 && job.jobStatus === 'idle' && (
               <div className="space-y-6">
-                {/* Image Preview */}
-                {previewUrl && (
+                {/* Original Image Preview */}
+                {previewUrl && originalDimensions && (
                   <div className="rounded-lg border border-border bg-muted/30 p-4">
-                    <h3 className="mb-3 text-sm font-semibold">Preview</h3>
+                    <h3 className="mb-3 text-sm font-semibold">Original Image</h3>
                     <div className="flex justify-center">
                       <img
                         src={previewUrl}
-                        alt="Selected image preview"
+                        alt="Original image preview"
                         className="max-h-64 rounded-lg object-contain"
                       />
                     </div>
-                    <p className="mt-3 text-center text-xs text-muted-foreground">
-                      {selectedFiles[0].name} • {(selectedFiles[0].size / 1024).toFixed(2)} KB
-                    </p>
+                    <div className="mt-3 text-center space-y-1">
+                      <p className="text-sm font-medium">
+                        {originalDimensions.width} × {originalDimensions.height} px
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedFiles[0].name} • {formatFileSize(selectedFiles[0].size)}
+                      </p>
+                    </div>
                   </div>
                 )}
 
@@ -229,7 +312,36 @@ export default function ResizeImagePage() {
                   onProcess={handleProcess}
                   disabled={isProcessing}
                   isLoading={isProcessing}
+                  originalWidth={originalDimensions?.width}
+                  originalHeight={originalDimensions?.height}
                 />
+              </div>
+            )}
+
+            {/* Output Preview - shown after processing */}
+            {job.jobStatus === 'done' && outputPreviewUrl && outputDimensions && (
+              <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
+                <h3 className="mb-3 text-sm font-semibold text-primary">Resized Image</h3>
+                <div className="flex justify-center">
+                  <img
+                    src={outputPreviewUrl}
+                    alt="Resized image preview"
+                    className="max-h-64 rounded-lg object-contain"
+                  />
+                </div>
+                <div className="mt-3 text-center space-y-1">
+                  <p className="text-sm font-medium">
+                    {outputDimensions.width} × {outputDimensions.height} px
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {formatFileSize(outputDimensions.size)}
+                  </p>
+                  {originalDimensions && (
+                    <p className="text-xs text-primary font-medium">
+                      Size reduced by {(((selectedFiles[0].size - outputDimensions.size) / selectedFiles[0].size) * 100).toFixed(1)}%
+                    </p>
+                  )}
+                </div>
               </div>
             )}
           </ToolExperience>

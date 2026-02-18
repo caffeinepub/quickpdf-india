@@ -1,134 +1,79 @@
 {
   "kind": "build_request",
-  "title": "Remove broken pdfMake Word-to-PDF and rebuild as stable upload/convert/download flow",
-  "projectName": "Word to PDF",
+  "title": "Fix Image Resize mode buttons styling and mobile responsiveness",
+  "projectName": "Resize Image Tool",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Completely remove the existing client-side Word-to-PDF implementation and all pdfMake initialization/loading logic so the app no longer attempts to load pdfMake (including CDN scripts) or shows errors like \"PDF library failed to initialize\" / \"pdfMake failed to load\".",
+      "text": "Fix the 'By Pixels', 'By Percentage', and 'Target Size' mode controls in the Image Resize options so they do not overflow on mobile and remain usable on all screen sizes.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-9"
         ],
         "quotes": [
-          "Remove the existing \"Word to PDF\" feature completely because it is broken and showing errors like: \"PDF library failed to initialize\" and \"pdfMake failed to load\"",
-          "DO NOT use pdfMake",
-          "DO NOT use any unstable CDN libraries",
-          "IMPORTANT: Do not reuse old code. Start fresh and ensure it works properly."
+          "By Pixels\nBy Percentage\nTarget Size button fix it background color & size im mobile size its size overflow create buttons responsible"
         ]
       },
       "acceptanceCriteria": [
-        "Navigating anywhere in the app (including /word-to-pdf) does not load or reference pdfMake.",
-        "Remove the startup pdfMake initialization in frontend/src/App.tsx (no initPdfMake call on app mount).",
-        "Remove/retire the pdfMake-based modules (e.g., wordToPdfProcessor, wordToPdfLibraries) or refactor them so they are no longer used/referenced by the Word-to-PDF page.",
-        "No user-facing error messages referencing pdfMake appear during normal usage of the app."
+        "On narrow/mobile viewports, the mode selector (By Pixels / By Percentage / Target Size) does not cause horizontal page overflow.",
+        "All three mode buttons remain visible and tappable on mobile (no clipping, overlap, or off-screen rendering).",
+        "The mode selector layout adapts responsively (e.g., wraps to multiple lines or allows safe horizontal scrolling) without breaking desktop layout.",
+        "Active/inactive tab background and text colors are visually correct and consistent with the app theme (no unreadable text or missing background)."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Rebuild the Word-to-PDF tool frontend as a simple 3-step UI (Upload Word file → Convert → Download PDF) using only stable, locally-bundled code (no CDN-loaded libraries). The UI must: show selected file name, show a loading indicator while converting, show a success message after conversion, use a clean visible green primary button, disable the Convert button while processing, and avoid confusing messages.",
+      "text": "Update the Image Resize options form layout to prevent input/control overflow on mobile for all modes, including the Target Size input + unit selector row.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-9"
         ],
         "quotes": [
-          "Frontend:\n- Simple UI:\n  Step 1: Upload Word file\n  Step 2: Click Convert\n  Step 3: Download PDF\n\n- Show:\n  - Selected file name\n  - Loading indicator while converting\n  - Success message after conversion",
-          "UX:\n- Clean green button (visible)\n- Disable button while processing\n- No confusing messages",
-          "Use English for any user-facing text in the build request."
+          "Target Size button fix it background color & size im mobile size its size overflow"
         ]
       },
       "acceptanceCriteria": [
-        "The /word-to-pdf page clearly presents the 3 steps and a single primary green Convert button.",
-        "After selecting a file, the page displays the selected file name.",
-        "When conversion is in progress, the Convert button is disabled and shows a loading state (e.g., button text changes to \"Converting...\" and/or a spinner).",
-        "On success, the page shows a clear success message in English and provides a Download PDF action that downloads the converted PDF.",
-        "All user-facing strings on this tool page are in English."
+        "In 'Target Size' mode on mobile, the numeric input and unit dropdown do not overflow their container and remain fully visible.",
+        "In 'By Pixels' mode on mobile, width/height inputs are readable and do not overflow; the layout stacks or compresses appropriately.",
+        "No horizontal scrolling is introduced by any controls within the Image Resize options card at common mobile widths (e.g., ~320px)."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Implement strict file validation for the Word-to-PDF tool: accept only .docx files, enforce a 10MB maximum file size, and show a clear English error message when the file type or file size is invalid.",
+      "text": "Apply consistent responsive spacing/typography improvements for the Image Resize page options section so the UI/UX looks polished across mobile, tablet, and desktop without changing tool behavior.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4",
+          "msg-9"
         ],
         "quotes": [
-          "File handling:\n- Accept only .docx\n- Limit file size (10MB)\n- Show error if invalid file"
+          "Fix ui ux & responsive design for all devices",
+          "create buttons responsible"
         ]
       },
       "acceptanceCriteria": [
-        "The upload control rejects non-.docx files and surfaces an English validation error (no conversion attempt is started).",
-        "Files larger than 10MB are rejected with an English validation error (no conversion attempt is started).",
-        "The Convert button is not enabled unless exactly one valid .docx file (<=10MB) is selected."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Add a backend-based Word-to-PDF conversion API that accepts an uploaded .docx and returns a downloadable PDF, and wire the frontend Convert action to call this backend API.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Use a reliable backend-based approach:\n\nBackend (Node.js):\n- Use LibreOffice (headless mode) for conversion\n- Accept .docx file upload\n- Convert to PDF\n- Return downloadable file",
-          "Build a fresh, working Word to PDF tool"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Clicking Convert uploads the selected .docx to the backend conversion endpoint and waits for a response.",
-        "On success, the frontend receives PDF bytes/blob and enables downloading a .pdf file with a filename derived from the original (.docx → .pdf).",
-        "If the backend returns an error, the frontend shows a clear English error message and returns to an idle state (Convert becomes enabled again)."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Remove or update any tool metadata, copy, and UX that claims Word-to-PDF conversion happens “in your browser” and ensure the Word-to-PDF page content matches the new backend-based flow (still keeping messages simple and non-confusing).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Use a reliable backend-based approach",
-          "No confusing messages"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The Word-to-PDF page no longer claims conversion happens locally/in-browser.",
-        "The page description/help text is minimal, clear, and consistent with a backend conversion flow.",
-        "No references to pdfMake or CDN loading appear in the Word-to-PDF tool UI."
+        "The Resize Image page options area has comfortable padding and spacing on mobile and does not look cramped or oversized compared to tablet/desktop.",
+        "No functional changes to the resize logic occur; only presentation/layout/styling is adjusted.",
+        "All user-facing labels remain in English and unchanged in meaning."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor (backend/main.mo); do not introduce Node.js services into this project.",
-    "LibreOffice headless cannot run inside a Motoko canister; implementing “Node.js + LibreOffice” as described is not possible within this platform. If backend-based conversion is required, an alternative approach must be chosen (e.g., integrating with a user-provided stable external conversion HTTP API) while keeping frontend free of CDN libraries and pdfMake.",
-    "Do not edit files under frontend/src/components/ui (read-only).",
-    "Do not edit immutable hook/bootstrap files: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx."
+    "Do not edit files under frontend/src/components/ui (shadcn/ui components); fix responsiveness by adjusting usage/classes in feature components (e.g., ImageResizeOptions) and/or other non-immutable styling locations.",
+    "Do not modify any immutable paths listed in SYSTEM_CONTEXT.frontend.immutablePaths.",
+    "Keep backend unchanged; this request is UI/UX and responsiveness only."
   ],
   "nonGoals": [
-    "Adding additional document formats beyond .docx (e.g., .doc).",
-    "Adding advanced conversion options (page size, margins, OCR, preserving complex formatting controls).",
-    "Adding user accounts/auth changes for this tool.",
-    "Rebuilding unrelated PDF tools (merge/split/compress/etc.)."
+    "Implementing new resize modes or changing the image resizing algorithm.",
+    "Adding new backend endpoints or changing Motoko canister state.",
+    "Introducing real-time features or external integrations."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

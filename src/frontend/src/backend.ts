@@ -89,31 +89,6 @@ export class ExternalBlob {
         return this;
     }
 }
-export interface http_header {
-    value: string;
-    name: string;
-}
-export interface WatermarkConfig {
-    rotation: bigint;
-    fontStyle: string;
-    text: string;
-    position: WatermarkPosition;
-    fontSize: bigint;
-    opacity: number;
-}
-export type UserId = bigint;
-export interface TransformationOutput {
-    status: bigint;
-    body: Uint8Array;
-    headers: Array<http_header>;
-}
-export interface _CaffeineStorageRefillInformation {
-    proposed_top_up_amount?: bigint;
-}
-export interface TransformationInput {
-    context: Uint8Array;
-    response: http_request_result;
-}
 export interface _CaffeineStorageCreateCertificateResult {
     method: string;
     blob_hash: string;
@@ -122,17 +97,8 @@ export interface _CaffeineStorageRefillResult {
     success?: boolean;
     topped_up_amount?: bigint;
 }
-export interface http_request_result {
-    status: bigint;
-    body: Uint8Array;
-    headers: Array<http_header>;
-}
-export enum WatermarkPosition {
-    center = "center",
-    bottomLeft = "bottomLeft",
-    topRight = "topRight",
-    bottomRight = "bottomRight",
-    topLeft = "topLeft"
+export interface _CaffeineStorageRefillInformation {
+    proposed_top_up_amount?: bigint;
 }
 export interface backendInterface {
     _caffeineStorageBlobIsLive(hash: Uint8Array): Promise<boolean>;
@@ -141,12 +107,9 @@ export interface backendInterface {
     _caffeineStorageCreateCertificate(blobHash: string): Promise<_CaffeineStorageCreateCertificateResult>;
     _caffeineStorageRefillCashier(refillInformation: _CaffeineStorageRefillInformation | null): Promise<_CaffeineStorageRefillResult>;
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
-    convertWordToPdf(docxFile: string): Promise<string>;
-    getWatermarkConfig(userId: UserId): Promise<WatermarkConfig>;
-    setWatermarkConfig(userId: UserId, config: WatermarkConfig): Promise<void>;
-    transform(input: TransformationInput): Promise<TransformationOutput>;
+    convertWordToPdf(_wordBlob: Uint8Array, _extraHeaders: Array<[string, string]>): Promise<void>;
 }
-import type { WatermarkConfig as _WatermarkConfig, WatermarkPosition as _WatermarkPosition, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
+import type { _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _caffeineStorageBlobIsLive(arg0: Uint8Array): Promise<boolean> {
@@ -233,68 +196,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async convertWordToPdf(arg0: string): Promise<string> {
+    async convertWordToPdf(arg0: Uint8Array, arg1: Array<[string, string]>): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.convertWordToPdf(arg0);
+                const result = await this.actor.convertWordToPdf(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.convertWordToPdf(arg0);
+            const result = await this.actor.convertWordToPdf(arg0, arg1);
             return result;
         }
     }
-    async getWatermarkConfig(arg0: UserId): Promise<WatermarkConfig> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.getWatermarkConfig(arg0);
-                return from_candid_WatermarkConfig_n8(this._uploadFile, this._downloadFile, result);
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.getWatermarkConfig(arg0);
-            return from_candid_WatermarkConfig_n8(this._uploadFile, this._downloadFile, result);
-        }
-    }
-    async setWatermarkConfig(arg0: UserId, arg1: WatermarkConfig): Promise<void> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.setWatermarkConfig(arg0, to_candid_WatermarkConfig_n12(this._uploadFile, this._downloadFile, arg1));
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.setWatermarkConfig(arg0, to_candid_WatermarkConfig_n12(this._uploadFile, this._downloadFile, arg1));
-            return result;
-        }
-    }
-    async transform(arg0: TransformationInput): Promise<TransformationOutput> {
-        if (this.processError) {
-            try {
-                const result = await this.actor.transform(arg0);
-                return result;
-            } catch (e) {
-                this.processError(e);
-                throw new Error("unreachable");
-            }
-        } else {
-            const result = await this.actor.transform(arg0);
-            return result;
-        }
-    }
-}
-function from_candid_WatermarkConfig_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _WatermarkConfig): WatermarkConfig {
-    return from_candid_record_n9(_uploadFile, _downloadFile, value);
-}
-function from_candid_WatermarkPosition_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _WatermarkPosition): WatermarkPosition {
-    return from_candid_variant_n11(_uploadFile, _downloadFile, value);
 }
 function from_candid__CaffeineStorageRefillResult_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: __CaffeineStorageRefillResult): _CaffeineStorageRefillResult {
     return from_candid_record_n5(_uploadFile, _downloadFile, value);
@@ -317,78 +232,11 @@ function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint
         topped_up_amount: record_opt_to_undefined(from_candid_opt_n7(_uploadFile, _downloadFile, value.topped_up_amount))
     };
 }
-function from_candid_record_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    rotation: bigint;
-    fontStyle: string;
-    text: string;
-    position: _WatermarkPosition;
-    fontSize: bigint;
-    opacity: number;
-}): {
-    rotation: bigint;
-    fontStyle: string;
-    text: string;
-    position: WatermarkPosition;
-    fontSize: bigint;
-    opacity: number;
-} {
-    return {
-        rotation: value.rotation,
-        fontStyle: value.fontStyle,
-        text: value.text,
-        position: from_candid_WatermarkPosition_n10(_uploadFile, _downloadFile, value.position),
-        fontSize: value.fontSize,
-        opacity: value.opacity
-    };
-}
-function from_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    center: null;
-} | {
-    bottomLeft: null;
-} | {
-    topRight: null;
-} | {
-    bottomRight: null;
-} | {
-    topLeft: null;
-}): WatermarkPosition {
-    return "center" in value ? WatermarkPosition.center : "bottomLeft" in value ? WatermarkPosition.bottomLeft : "topRight" in value ? WatermarkPosition.topRight : "bottomRight" in value ? WatermarkPosition.bottomRight : "topLeft" in value ? WatermarkPosition.topLeft : value;
-}
-function to_candid_WatermarkConfig_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: WatermarkConfig): _WatermarkConfig {
-    return to_candid_record_n13(_uploadFile, _downloadFile, value);
-}
-function to_candid_WatermarkPosition_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: WatermarkPosition): _WatermarkPosition {
-    return to_candid_variant_n15(_uploadFile, _downloadFile, value);
-}
 function to_candid__CaffeineStorageRefillInformation_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CaffeineStorageRefillInformation): __CaffeineStorageRefillInformation {
     return to_candid_record_n3(_uploadFile, _downloadFile, value);
 }
 function to_candid_opt_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _CaffeineStorageRefillInformation | null): [] | [__CaffeineStorageRefillInformation] {
     return value === null ? candid_none() : candid_some(to_candid__CaffeineStorageRefillInformation_n2(_uploadFile, _downloadFile, value));
-}
-function to_candid_record_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    rotation: bigint;
-    fontStyle: string;
-    text: string;
-    position: WatermarkPosition;
-    fontSize: bigint;
-    opacity: number;
-}): {
-    rotation: bigint;
-    fontStyle: string;
-    text: string;
-    position: _WatermarkPosition;
-    fontSize: bigint;
-    opacity: number;
-} {
-    return {
-        rotation: value.rotation,
-        fontStyle: value.fontStyle,
-        text: value.text,
-        position: to_candid_WatermarkPosition_n14(_uploadFile, _downloadFile, value.position),
-        fontSize: value.fontSize,
-        opacity: value.opacity
-    };
 }
 function to_candid_record_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     proposed_top_up_amount?: bigint;
@@ -398,29 +246,6 @@ function to_candid_record_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
     return {
         proposed_top_up_amount: value.proposed_top_up_amount ? candid_some(value.proposed_top_up_amount) : candid_none()
     };
-}
-function to_candid_variant_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: WatermarkPosition): {
-    center: null;
-} | {
-    bottomLeft: null;
-} | {
-    topRight: null;
-} | {
-    bottomRight: null;
-} | {
-    topLeft: null;
-} {
-    return value == WatermarkPosition.center ? {
-        center: null
-    } : value == WatermarkPosition.bottomLeft ? {
-        bottomLeft: null
-    } : value == WatermarkPosition.topRight ? {
-        topRight: null
-    } : value == WatermarkPosition.bottomRight ? {
-        bottomRight: null
-    } : value == WatermarkPosition.topLeft ? {
-        topLeft: null
-    } : value;
 }
 export interface CreateActorOptions {
     agent?: Agent;

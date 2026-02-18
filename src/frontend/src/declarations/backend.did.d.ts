@@ -10,29 +10,6 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface TransformationInput {
-  'context' : Uint8Array,
-  'response' : http_request_result,
-}
-export interface TransformationOutput {
-  'status' : bigint,
-  'body' : Uint8Array,
-  'headers' : Array<http_header>,
-}
-export type UserId = bigint;
-export interface WatermarkConfig {
-  'rotation' : bigint,
-  'fontStyle' : string,
-  'text' : string,
-  'position' : WatermarkPosition,
-  'fontSize' : bigint,
-  'opacity' : number,
-}
-export type WatermarkPosition = { 'center' : null } |
-  { 'bottomLeft' : null } |
-  { 'topRight' : null } |
-  { 'bottomRight' : null } |
-  { 'topLeft' : null };
 export interface _CaffeineStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
@@ -43,12 +20,6 @@ export interface _CaffeineStorageRefillInformation {
 export interface _CaffeineStorageRefillResult {
   'success' : [] | [boolean],
   'topped_up_amount' : [] | [bigint],
-}
-export interface http_header { 'value' : string, 'name' : string }
-export interface http_request_result {
-  'status' : bigint,
-  'body' : Uint8Array,
-  'headers' : Array<http_header>,
 }
 export interface _SERVICE {
   '_caffeineStorageBlobIsLive' : ActorMethod<[Uint8Array], boolean>,
@@ -66,10 +37,10 @@ export interface _SERVICE {
     _CaffeineStorageRefillResult
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
-  'convertWordToPdf' : ActorMethod<[string], string>,
-  'getWatermarkConfig' : ActorMethod<[UserId], WatermarkConfig>,
-  'setWatermarkConfig' : ActorMethod<[UserId, WatermarkConfig], undefined>,
-  'transform' : ActorMethod<[TransformationInput], TransformationOutput>,
+  'convertWordToPdf' : ActorMethod<
+    [Uint8Array, Array<[string, string]>],
+    undefined
+  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

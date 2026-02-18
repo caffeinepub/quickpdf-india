@@ -1,112 +1,56 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-18T05:20:38.135Z",
+  "generatedAt": "2026-02-18T11:05:10.555Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 5,
-    "implemented": 5,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Completely remove the existing client-side Word-to-PDF implementation and all pdfMake initialization/loading logic so the app no longer attempts to load pdfMake (including CDN scripts) or shows errors like \"PDF library failed to initialize\" / \"pdfMake failed to load\".",
+        "summary": "Fix the 'By Pixels', 'By Percentage', and 'Target Size' mode controls in the Image Resize options so they do not overflow on mobile and remain usable on all screen sizes.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/components/tools/processors/conversion/index.ts",
-          "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts",
-          "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
-          "frontend/src/pages/tools/WordToPdfPage.tsx"
+          "frontend/src/components/tools/image/ImageResizeOptions.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/components/tools/processors/conversion/index.ts",
-          "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts",
-          "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
-          "frontend/src/pages/tools/WordToPdfPage.tsx"
+          "frontend/src/components/tools/image/ImageResizeOptions.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Rebuild the Word-to-PDF tool frontend as a simple 3-step UI (Upload Word file → Convert → Download PDF) using only stable, locally-bundled code (no CDN-loaded libraries). The UI must: show selected file name, show a loading indicator while converting, show a success message after conversion, use a clean visible green primary button, disable the Convert button while processing, and avoid confusing messages.",
+        "summary": "Update the Image Resize options form layout to prevent input/control overflow on mobile for all modes, including the Target Size input + unit selector row.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/tools/WordToPdfPage.tsx",
-          "frontend/src/components/tools/ToolExperience.tsx",
-          "frontend/src/components/tools/ToolResultDownload.tsx"
+          "frontend/src/components/tools/image/ImageResizeOptions.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/tools/WordToPdfPage.tsx"
+          "frontend/src/components/tools/image/ImageResizeOptions.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Implement strict file validation for the Word-to-PDF tool: accept only .docx files, enforce a 10MB maximum file size, and show a clear English error message when the file type or file size is invalid.",
+        "summary": "Apply consistent responsive spacing/typography improvements for the Image Resize page options section so the UI/UX looks polished across mobile, tablet, and desktop without changing tool behavior.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/tools/WordToPdfPage.tsx",
-          "frontend/src/components/tools/UploadDropzone.tsx",
-          "frontend/src/config/toolLimits.ts"
+          "frontend/src/components/tools/image/ImageResizeOptions.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/tools/WordToPdfPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Add a backend-based Word-to-PDF conversion API that accepts an uploaded .docx and returns a downloadable PDF, and wire the frontend Convert action to call this backend API.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/tools/WordToPdfPage.tsx",
-          "frontend/src/lib/base64.ts",
-          "frontend/src/components/tools/toolError.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/tools/WordToPdfPage.tsx",
-          "frontend/src/lib/base64.ts",
-          "frontend/src/components/tools/toolError.ts"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Remove or update any tool metadata, copy, and UX that claims Word-to-PDF conversion happens “in your browser” and ensure the Word-to-PDF page content matches the new backend-based flow (still keeping messages simple and non-confusing).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/tools/WordToPdfPage.tsx",
-          "frontend/src/components/home/toolsCatalog.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/tools/WordToPdfPage.tsx",
-          "frontend/src/components/home/toolsCatalog.ts"
+          "frontend/src/components/tools/image/ImageResizeOptions.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/http-outcalls/outcall.mo",
-    "backend/main.mo",
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/home/ToolsGrid.tsx",
-    "frontend/src/components/home/toolsCatalog.ts",
-    "frontend/src/components/seo/RelatedToolsLinks.tsx",
-    "frontend/src/components/tools/processors/conversion/index.ts",
-    "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts",
-    "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
-    "frontend/src/components/tools/toolError.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/lib/base64.ts",
-    "frontend/src/pages/tools/WordToPdfPage.tsx",
+    "frontend/src/components/tools/image/ImageResizeOptions.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

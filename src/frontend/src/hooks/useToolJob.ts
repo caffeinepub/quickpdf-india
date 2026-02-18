@@ -16,8 +16,12 @@ export function useToolJob() {
     progress: 0,
   });
 
+  const startUploading = useCallback(() => {
+    setState({ status: 'uploading', progress: 0 });
+  }, []);
+
   const startProcessing = useCallback(() => {
-    setState({ status: 'processing', progress: 0 });
+    setState((prev) => ({ ...prev, status: 'processing', progress: 0 }));
   }, []);
 
   const updateProgress = useCallback((progress: number) => {
@@ -67,6 +71,7 @@ export function useToolJob() {
     progress: state.progress,
     resultFile: state.resultFile,
     error: state.error,
+    startUploading,
     startProcessing,
     updateProgress,
     completeProcessing,

@@ -1,54 +1,34 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Build a simple, stable Word-to-PDF conversion tool using a Node.js backend with LibreOffice headless, plus a minimal frontend upload/convert/download UI (no pdfMake or unstable CDNs).",
-  "architectural_notes": [
-    "Do not use pdfMake.",
-    "Do not rely on unstable CDN libraries; prefer local dependencies.",
-    "Backend: Node.js service handles .docx upload, converts to PDF using LibreOffice in headless mode, returns downloadable PDF."
-  ],
+  "summary": "App includes Word-to-PDF conversion and image resize flow; current focus is improving UI/UX and responsiveness across devices, especially fixing mobile overflow/styling for resize mode buttons.",
+  "architectural_notes": [],
   "known_issues": [
-    "Existing Word-to-PDF implementation is broken with errors: \"PDF library failed to initialize\" and \"pdfMake failed to load\"."
+    "On mobile, the 'By Pixels' / 'By Percentage' / 'Target Size' controls overflow and have incorrect background color/sizing."
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-completely-remove-the-existing-client-side-word-to-pdf-implementation-and-all-pdfmake-initialization-loading-logic-so-the-app-no-longer-attempts-to-load-pdfmake-including-cdn-scripts-or-shows-errors-like-pdf-library-failed-to-initialize-pdfmake-failed-to-load",
-      "title": "Completely remove the existing client-side Word-to-PDF implementation and all pdfMake initialization/loading logic so the app no longer attempts to load pdfMake (including CDN scripts) or shows errors like \"PDF library failed to initialize\" / \"pdfMake failed to load\".",
+      "id": "feature-fix-the-by-pixels-by-percentage-and-target-size-mode-controls-in-the-image-resize-options-so-they-do-not-overflow-on-mobile-and-remain-usable-on-all-screen-sizes",
+      "title": "Fix the 'By Pixels', 'By Percentage', and 'Target Size' mode controls in the Image Resize options so they do not overflow on mobile and remain usable on all screen sizes.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-rebuild-the-word-to-pdf-tool-frontend-as-a-simple-3-step-ui-upload-word-file-convert-download-pdf-using-only-stable-locally-bundled-code-no-cdn-loaded-libraries-the-ui-must-show-selected-file-name-show-a-loading-indicator-while-converting-show-a-success-message-after-conversion-use-a-clean-visible-green-primary-button-disable-the-convert-button-while-processing-and-avoid-confusing-messages",
-      "title": "Rebuild the Word-to-PDF tool frontend as a simple 3-step UI (Upload Word file → Convert → Download PDF) using only stable, locally-bundled code (no CDN-loaded libraries). The UI must: show selected file name, show a loading indicator while converting, show a success message after conversion, use a clean visible green primary button, disable the Convert button while processing, and avoid confusing messages.",
+      "id": "feature-update-the-image-resize-options-form-layout-to-prevent-input-control-overflow-on-mobile-for-all-modes-including-the-target-size-input-unit-selector-row",
+      "title": "Update the Image Resize options form layout to prevent input/control overflow on mobile for all modes, including the Target Size input + unit selector row.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-strict-file-validation-for-the-word-to-pdf-tool-accept-only-docx-files-enforce-a-10mb-maximum-file-size-and-show-a-clear-english-error-message-when-the-file-type-or-file-size-is-invalid",
-      "title": "Implement strict file validation for the Word-to-PDF tool: accept only .docx files, enforce a 10MB maximum file size, and show a clear English error message when the file type or file size is invalid.",
+      "id": "feature-apply-consistent-responsive-spacing-typography-improvements-for-the-image-resize-page-options-section-so-the-ui-ux-looks-polished-across-mobile-tablet-and-desktop-without-changing-tool-behavior",
+      "title": "Apply consistent responsive spacing/typography improvements for the Image Resize page options section so the UI/UX looks polished across mobile, tablet, and desktop without changing tool behavior.",
       "reqIds": [
         "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-backend-based-word-to-pdf-conversion-api-that-accepts-an-uploaded-docx-and-returns-a-downloadable-pdf-and-wire-the-frontend-convert-action-to-call-this-backend-api",
-      "title": "Add a backend-based Word-to-PDF conversion API that accepts an uploaded .docx and returns a downloadable PDF, and wire the frontend Convert action to call this backend API.",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-remove-or-update-any-tool-metadata-copy-and-ux-that-claims-word-to-pdf-conversion-happens-in-your-browser-and-ensure-the-word-to-pdf-page-content-matches-the-new-backend-based-flow-still-keeping-messages-simple-and-non-confusing",
-      "title": "Remove or update any tool metadata, copy, and UX that claims Word-to-PDF conversion happens “in your browser” and ensure the Word-to-PDF page content matches the new backend-based flow (still keeping messages simple and non-confusing).",
-      "reqIds": [
-        "REQ-5"
       ],
       "version": 1
     }
@@ -56,12 +36,18 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Rebuild Word-to-PDF tool from scratch: Node.js backend upload .docx (10MB max), convert via LibreOffice headless, return downloadable PDF; minimal frontend with file name, loading state, success/error messaging, and disabled convert button while processing (no pdfMake/CDN libs).",
+      "summary": "Improve overall UI/UX and make the app fully responsive across all devices",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Fix 'By Pixels', 'By Percentage', and 'Target Size' buttons on mobile (background color, sizing, and overflow) and make these controls responsive",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Word to PDF",
+  "projectName": "Resize Image Tool",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

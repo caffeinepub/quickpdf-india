@@ -1,143 +1,54 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Rebuild Word→PDF as backend-conversion flow and remove pdfMake",
+  "title": "Resize Image Tool — Fix mode selector styling and mobile responsiveness",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Remove all pdfMake client-side Word→PDF code and any startup initialization so the app never loads or references pdfMake/CDN scripts.",
+      "summary": "Make the Resize Options mode selector (By Pixels / By Percentage / Target Size) responsive and prevent mobile overflow while keeping active/inactive styling consistent.",
       "acceptanceCriteria": [
-        "Navigating anywhere in the app (including /word-to-pdf) does not load or reference pdfMake.",
-        "Remove the startup pdfMake initialization in frontend/src/App.tsx (no initPdfMake call on app mount).",
-        "Remove/retire the pdfMake-based modules (e.g., wordToPdfProcessor, wordToPdfLibraries) or refactor them so they are no longer used/referenced by the Word-to-PDF page.",
-        "No user-facing error messages referencing pdfMake appear during normal usage of the app."
+        "On narrow/mobile viewports, the mode selector (By Pixels / By Percentage / Target Size) does not cause horizontal page overflow.",
+        "All three mode buttons remain visible and tappable on mobile (no clipping, overlap, or off-screen rendering).",
+        "The mode selector layout adapts responsively (e.g., wraps to multiple lines or allows safe horizontal scrolling) without breaking desktop layout.",
+        "Active/inactive tab background and text colors are visually correct and consistent with the app theme (no unreadable text or missing background)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/components/tools/image/ImageResizeOptions.tsx",
           "operation": "modify",
-          "description": "Remove the pdfMake startup initialization: delete the initPdfMake import and the useEffect that calls it, ensuring the app no longer attempts to initialize/load pdfMake."
-        },
-        {
-          "path": "frontend/src/components/tools/processors/conversion/index.ts",
-          "operation": "modify",
-          "description": "Remove exports that expose pdfMake/CDN loader utilities (e.g., initPdfMake/loadConversionLibraries) so no other frontend code can import them."
-        },
-        {
-          "path": "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts",
-          "operation": "delete",
-          "description": "Delete the pdfMake/JSZip CDN loader module so there is no remaining pdfMake initialization/loading logic in the codebase."
-        },
-        {
-          "path": "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
-          "operation": "delete",
-          "description": "Delete the client-side pdfMake-based Word→PDF processor so the Word-to-PDF page can no longer use or reference it."
-        },
-        {
-          "path": "frontend/src/pages/tools/WordToPdfPage.tsx",
-          "operation": "modify",
-          "description": "Remove any imports/usages of the deleted pdfMake-based processor and any pdfMake-related error wording; switch the page to the new backend-based conversion flow."
+          "description": "Adjust the TabsList/TabsTrigger class usage to prevent overflow on mobile (e.g., replace rigid grid layout with a wrapping flex layout or safe horizontal scrolling) and explicitly set responsive padding/typography plus theme-consistent active/inactive colors via utility classes. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Rebuild the Word→PDF page UI into a clear 3-step flow (Upload → Convert → Download) with a green primary button, loading/success states, and simple English messaging using only locally-bundled code.",
+      "summary": "Update Resize Options form layouts across modes to avoid input/control overflow on mobile, including the Target Size input + unit selector row.",
       "acceptanceCriteria": [
-        "The /word-to-pdf page clearly presents the 3 steps and a single primary green Convert button.",
-        "After selecting a file, the page displays the selected file name.",
-        "When conversion is in progress, the Convert button is disabled and shows a loading state (e.g., button text changes to \"Converting...\" and/or a spinner).",
-        "On success, the page shows a clear success message in English and provides a Download PDF action that downloads the converted PDF.",
-        "All user-facing strings on this tool page are in English."
+        "In 'Target Size' mode on mobile, the numeric input and unit dropdown do not overflow their container and remain fully visible.",
+        "In 'By Pixels' mode on mobile, width/height inputs are readable and do not overflow; the layout stacks or compresses appropriately.",
+        "No horizontal scrolling is introduced by any controls within the Image Resize options card at common mobile widths (e.g., ~320px)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/tools/WordToPdfPage.tsx",
+          "path": "frontend/src/components/tools/image/ImageResizeOptions.tsx",
           "operation": "modify",
-          "description": "Rebuild the page UI to explicitly communicate the 3 steps (Upload Word file → Convert → Download PDF), keep one clear primary green Convert button (use existing ToolPrimaryActionButton), show selected file name via the existing ToolExperience/SelectedFilesList flow, and ensure Convert is disabled + shows loading while processing. Use only locally-bundled code (no CDN libraries)."
-        },
-        {
-          "path": "frontend/src/components/tools/ToolExperience.tsx",
-          "operation": "modify",
-          "description": "Adjust any generic step/callout microcopy if needed to keep the Word→PDF flow non-confusing and consistent with a simple 3-step process (keep text in English)."
-        },
-        {
-          "path": "frontend/src/components/tools/ToolResultDownload.tsx",
-          "operation": "modify",
-          "description": "Remove or neutralize the footer copy that claims files are processed in-browser so success UI remains accurate for backend-based conversions while preserving the existing download action UX."
+          "description": "Refine responsive layout classes for each mode's controls: ensure pixel inputs use mobile-safe widths (e.g., min-w-0) and stacking behavior, and change the Target Size input + unit selector container to stack on small screens (e.g., flex-col on mobile, flex-row on larger) with width-safe SelectTrigger sizing. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Enforce strict frontend validation for Word→PDF: only .docx, max 10MB, and clear English errors; only enable Convert when one valid file is selected.",
+      "summary": "Polish responsive spacing and typography in the Resize Options section across devices without changing resize behavior.",
       "acceptanceCriteria": [
-        "The upload control rejects non-.docx files and surfaces an English validation error (no conversion attempt is started).",
-        "Files larger than 10MB are rejected with an English validation error (no conversion attempt is started).",
-        "The Convert button is not enabled unless exactly one valid .docx file (<=10MB) is selected."
+        "The Resize Image page options area has comfortable padding and spacing on mobile and does not look cramped or oversized compared to tablet/desktop.",
+        "No functional changes to the resize logic occur; only presentation/layout/styling is adjusted.",
+        "All user-facing labels remain in English and unchanged in meaning."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/tools/WordToPdfPage.tsx",
+          "path": "frontend/src/components/tools/image/ImageResizeOptions.tsx",
           "operation": "modify",
-          "description": "Set acceptedFileTypes to \".docx\" only; pass an explicit 10MB maxFileSizeBytes to the upload experience; ensure Convert button enablement requires exactly one selected file and add a defensive pre-submit validation that returns a clear English error without starting conversion when invalid."
-        },
-        {
-          "path": "frontend/src/components/tools/UploadDropzone.tsx",
-          "operation": "modify",
-          "description": "Ensure validation messaging remains clear and English for extension/size rejection for the Word→PDF use-case; keep behavior of rejecting invalid files without calling onFilesSelected."
-        },
-        {
-          "path": "frontend/src/config/toolLimits.ts",
-          "operation": "modify",
-          "description": "Confirm/align conversion file size limit to 10MB and ensure any limit-related messages remain clear and English for the Word→PDF tool flow."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Wire the Word→PDF Convert action to the existing backend conversion capability and download the returned PDF bytes with a derived filename; show clear errors on failure.",
-      "acceptanceCriteria": [
-        "Clicking Convert uploads the selected .docx to the backend conversion endpoint and waits for a response.",
-        "On success, the frontend receives PDF bytes/blob and enables downloading a .pdf file with a filename derived from the original (.docx → .pdf).",
-        "If the backend returns an error, the frontend shows a clear English error message and returns to an idle state (Convert becomes enabled again)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/tools/WordToPdfPage.tsx",
-          "operation": "modify",
-          "description": "Use the existing useActor hook to call the backend conversion capability (convertWordToPdf) from the Convert action; show loading state via the existing job state; on success, decode the returned data into a PDF Blob and complete the job with a filename derived from the original (.docx → .pdf); on failure, surface a clear English error and reset to idle state."
-        },
-        {
-          "path": "frontend/src/lib/base64.ts",
-          "operation": "create",
-          "description": "Add small local utilities to (1) convert a File/ArrayBuffer to a base64 string for sending to the backend and (2) convert a base64 string returned from the backend into a Uint8Array/Blob for download (no CDN libraries)."
-        },
-        {
-          "path": "frontend/src/components/tools/toolError.ts",
-          "operation": "modify",
-          "description": "Update error normalization/messaging so any Word→PDF backend conversion failures map to clear, non-confusing English messages (and do not mention pdfMake/CDNs)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Update Word→PDF page metadata and copy to match backend-based conversion; remove any claims about in-browser conversion and remove all pdfMake/CDN references in UI text.",
-      "acceptanceCriteria": [
-        "The Word-to-PDF page no longer claims conversion happens locally/in-browser.",
-        "The page description/help text is minimal, clear, and consistent with a backend conversion flow.",
-        "No references to pdfMake or CDN loading appear in the Word-to-PDF tool UI."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/tools/WordToPdfPage.tsx",
-          "operation": "modify",
-          "description": "Update SEO title/description, page description, and FAQs/help text to remove any claims of in-browser/local conversion and to reflect a simple backend-based upload/convert/download flow; ensure there are no UI references to pdfMake or CDN loading."
-        },
-        {
-          "path": "frontend/src/components/home/toolsCatalog.ts",
-          "operation": "modify",
-          "description": "Review and adjust the Word→PDF tool description text (if needed) so it does not imply in-browser conversion and remains minimal and non-confusing."
+          "description": "Tune responsive spacing/typography for the options card and header row: apply mobile-first padding (e.g., smaller base padding with sm+ increase), ensure the header/quality selector wraps cleanly on narrow screens, and standardize spacing between sections while keeping all existing labels/text unchanged. Verify the component's usage instructions before implementing."
         }
       ]
     }

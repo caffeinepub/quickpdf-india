@@ -1,13 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Replace the broken client-side Word-to-PDF feature with a stable upload → convert → download flow that does not use or reference pdfMake or CDN-loaded libraries.
+**Goal:** Fix the Image Resize mode selector and options layout so it remains visually correct and fully usable on mobile without changing resize behavior.
 
 **Planned changes:**
-- Remove all pdfMake initialization/loading logic and retire any pdfMake-based Word-to-PDF modules so no routes/pages reference pdfMake.
-- Rebuild the `/word-to-pdf` page UI as a simple 3-step flow: Upload `.docx` → Convert (primary green button) → Download PDF, with clear English status messages.
-- Add strict frontend validation: accept only a single `.docx` file, enforce a 10MB max size, and show clear English validation errors; keep Convert disabled until valid.
-- Add a backend-based conversion API endpoint and wire the frontend Convert action to upload the `.docx` and receive PDF bytes for download (with `.docx` filename converted to `.pdf`); handle backend errors with clear English messages.
-- Update/remove any Word-to-PDF page copy/metadata that claims conversion happens “in your browser” and ensure UI text matches the new backend-based flow.
+- Update the "By Pixels / By Percentage / Target Size" mode controls styling so the buttons are responsive (no overflow), remain visible/tappable on narrow screens, and have correct active/inactive background + text colors consistent with the theme.
+- Adjust the Image Resize options form layout for all modes to prevent input/control overflow on mobile (including the Target Size input + unit selector row), using responsive stacking/sizing as needed.
+- Apply small, consistent spacing/typography refinements to the Resize Image options section for a more polished look across mobile/tablet/desktop, without altering any tool logic.
 
-**User-visible outcome:** Users can upload one valid `.docx` (≤10MB), click a clear green Convert button to send it to the backend for conversion, then download the resulting `.pdf`, with straightforward English loading/success/error messages and no pdfMake-related errors.
+**User-visible outcome:** On phones and narrow screens, the Resize Image mode buttons and all related inputs fit cleanly within the page, remain readable and tappable, and no longer cause horizontal overflow.

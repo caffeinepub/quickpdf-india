@@ -19,40 +19,6 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
-export const UserId = IDL.Nat;
-export const WatermarkPosition = IDL.Variant({
-  'center' : IDL.Null,
-  'bottomLeft' : IDL.Null,
-  'topRight' : IDL.Null,
-  'bottomRight' : IDL.Null,
-  'topLeft' : IDL.Null,
-});
-export const WatermarkConfig = IDL.Record({
-  'rotation' : IDL.Nat,
-  'fontStyle' : IDL.Text,
-  'text' : IDL.Text,
-  'position' : WatermarkPosition,
-  'fontSize' : IDL.Nat,
-  'opacity' : IDL.Float64,
-});
-export const http_header = IDL.Record({
-  'value' : IDL.Text,
-  'name' : IDL.Text,
-});
-export const http_request_result = IDL.Record({
-  'status' : IDL.Nat,
-  'body' : IDL.Vec(IDL.Nat8),
-  'headers' : IDL.Vec(http_header),
-});
-export const TransformationInput = IDL.Record({
-  'context' : IDL.Vec(IDL.Nat8),
-  'response' : http_request_result,
-});
-export const TransformationOutput = IDL.Record({
-  'status' : IDL.Nat,
-  'body' : IDL.Vec(IDL.Nat8),
-  'headers' : IDL.Vec(http_header),
-});
 
 export const idlService = IDL.Service({
   '_caffeineStorageBlobIsLive' : IDL.Func(
@@ -81,13 +47,10 @@ export const idlService = IDL.Service({
       [],
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-  'convertWordToPdf' : IDL.Func([IDL.Text], [IDL.Text], []),
-  'getWatermarkConfig' : IDL.Func([UserId], [WatermarkConfig], ['query']),
-  'setWatermarkConfig' : IDL.Func([UserId, WatermarkConfig], [], []),
-  'transform' : IDL.Func(
-      [TransformationInput],
-      [TransformationOutput],
-      ['query'],
+  'convertWordToPdf' : IDL.Func(
+      [IDL.Vec(IDL.Nat8), IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text))],
+      [],
+      [],
     ),
 });
 
@@ -104,37 +67,6 @@ export const idlFactory = ({ IDL }) => {
   const _CaffeineStorageRefillResult = IDL.Record({
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
-  });
-  const UserId = IDL.Nat;
-  const WatermarkPosition = IDL.Variant({
-    'center' : IDL.Null,
-    'bottomLeft' : IDL.Null,
-    'topRight' : IDL.Null,
-    'bottomRight' : IDL.Null,
-    'topLeft' : IDL.Null,
-  });
-  const WatermarkConfig = IDL.Record({
-    'rotation' : IDL.Nat,
-    'fontStyle' : IDL.Text,
-    'text' : IDL.Text,
-    'position' : WatermarkPosition,
-    'fontSize' : IDL.Nat,
-    'opacity' : IDL.Float64,
-  });
-  const http_header = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
-  const http_request_result = IDL.Record({
-    'status' : IDL.Nat,
-    'body' : IDL.Vec(IDL.Nat8),
-    'headers' : IDL.Vec(http_header),
-  });
-  const TransformationInput = IDL.Record({
-    'context' : IDL.Vec(IDL.Nat8),
-    'response' : http_request_result,
-  });
-  const TransformationOutput = IDL.Record({
-    'status' : IDL.Nat,
-    'body' : IDL.Vec(IDL.Nat8),
-    'headers' : IDL.Vec(http_header),
   });
   
   return IDL.Service({
@@ -164,13 +96,10 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
-    'convertWordToPdf' : IDL.Func([IDL.Text], [IDL.Text], []),
-    'getWatermarkConfig' : IDL.Func([UserId], [WatermarkConfig], ['query']),
-    'setWatermarkConfig' : IDL.Func([UserId, WatermarkConfig], [], []),
-    'transform' : IDL.Func(
-        [TransformationInput],
-        [TransformationOutput],
-        ['query'],
+    'convertWordToPdf' : IDL.Func(
+        [IDL.Vec(IDL.Nat8), IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text))],
+        [],
+        [],
       ),
   });
 };
