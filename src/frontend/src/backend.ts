@@ -89,6 +89,10 @@ export class ExternalBlob {
         return this;
     }
 }
+export interface http_header {
+    value: string;
+    name: string;
+}
 export interface WatermarkConfig {
     rotation: bigint;
     fontStyle: string;
@@ -97,17 +101,31 @@ export interface WatermarkConfig {
     fontSize: bigint;
     opacity: number;
 }
+export type UserId = bigint;
+export interface TransformationOutput {
+    status: bigint;
+    body: Uint8Array;
+    headers: Array<http_header>;
+}
+export interface _CaffeineStorageRefillInformation {
+    proposed_top_up_amount?: bigint;
+}
+export interface TransformationInput {
+    context: Uint8Array;
+    response: http_request_result;
+}
 export interface _CaffeineStorageCreateCertificateResult {
     method: string;
     blob_hash: string;
 }
-export type UserId = bigint;
 export interface _CaffeineStorageRefillResult {
     success?: boolean;
     topped_up_amount?: bigint;
 }
-export interface _CaffeineStorageRefillInformation {
-    proposed_top_up_amount?: bigint;
+export interface http_request_result {
+    status: bigint;
+    body: Uint8Array;
+    headers: Array<http_header>;
 }
 export enum WatermarkPosition {
     center = "center",
@@ -123,8 +141,10 @@ export interface backendInterface {
     _caffeineStorageCreateCertificate(blobHash: string): Promise<_CaffeineStorageCreateCertificateResult>;
     _caffeineStorageRefillCashier(refillInformation: _CaffeineStorageRefillInformation | null): Promise<_CaffeineStorageRefillResult>;
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
+    convertWordToPdf(docxFile: string): Promise<string>;
     getWatermarkConfig(userId: UserId): Promise<WatermarkConfig>;
     setWatermarkConfig(userId: UserId, config: WatermarkConfig): Promise<void>;
+    transform(input: TransformationInput): Promise<TransformationOutput>;
 }
 import type { WatermarkConfig as _WatermarkConfig, WatermarkPosition as _WatermarkPosition, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -213,6 +233,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async convertWordToPdf(arg0: string): Promise<string> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.convertWordToPdf(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.convertWordToPdf(arg0);
+            return result;
+        }
+    }
     async getWatermarkConfig(arg0: UserId): Promise<WatermarkConfig> {
         if (this.processError) {
             try {
@@ -238,6 +272,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.setWatermarkConfig(arg0, to_candid_WatermarkConfig_n12(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async transform(arg0: TransformationInput): Promise<TransformationOutput> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.transform(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.transform(arg0);
             return result;
         }
     }

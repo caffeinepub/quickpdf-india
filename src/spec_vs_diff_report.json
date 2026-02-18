@@ -1,64 +1,51 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-18T05:08:53.784Z",
-  "summary": "The diff does not implement the requested switch to local pdfmake/vfs_fonts imports with explicit VFS initialization. Instead, it continues using CDN script injection and window globals, and the required debug logs are not in the exact form specified. Retry/recovery behavior is not clearly evidenced in the provided truncated diff.",
+  "generatedAt": "2026-02-18T05:20:38.131Z",
+  "summary": "The diff removes pdfMake initialization from App.tsx and rebuilds the Word-to-PDF page to upload a file, validate .docx/10MB, call a backend method, and produce a downloadable PDF blob. However, the backend conversion API does not appear to accept an uploaded .docx (bytes/blob) and instead takes a Text string that is treated like a URL, which likely does not satisfy the required backend-based upload/convert/download flow.",
   "missing_requirements": [
     {
-      "id": "REQ-1",
-      "requirement": "Replace CDN/script-tag based pdfMake loading in wordToPdfLibraries.ts with local imports (pdfmake/build/pdfmake and pdfmake/build/vfs_fonts) and explicit VFS initialization (pdfMake.vfs = pdfFonts.pdfMake.vfs); remove window.pdfMake and script injection.",
-      "reason": "The diff still defines CDN URLs for pdfmake and vfs_fonts, injects <script> tags into document.head, and reads pdfMake from window instead of using the required local import pattern.",
-      "evidence": [
-        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts: defines PDFMAKE_URL/PDFMAKE_FONTS_URL; loadScript() creates script element and appends to document.head; uses (window as any).pdfMake"
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "requirement": "Ensure initPdfMake() validates pdfFonts is correctly loaded (not undefined) and pdfMake.vfs is available before PDF generation; keep startup init in App.tsx and loadConversionLibraries() guaranteeing initialized pdfMake.",
-      "reason": "No evidence of local pdfFonts import/validation; instead the code constructs a synthetic pdfFonts object from window.pdfMake.vfs, so it cannot detect/handle the real condition of pdfFonts being undefined or missing pdfFonts.pdfMake.vfs as required.",
-      "evidence": [
-        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts: uses CDN loadScript for vfs_fonts; creates const pdfFonts = { pdfMake: { vfs: pdfMakeWithFonts.vfs } } rather than validating imported pdfFonts"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "requirement": "Add debug logging during pdfMake initialization to print both objects with console.log(pdfMake); console.log(pdfFonts); in initPdfMake() before any PDF generation.",
-      "reason": "The diff logs labeled strings ('pdfMake:' / 'pdfFonts:') rather than printing the objects exactly as specified, and thus does not match the required logging pattern.",
-      "evidence": [
-        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts: console.log('pdfMake:', pdfMake); console.log('pdfFonts:', pdfFonts);"
-      ]
-    },
-    {
       "id": "REQ-4",
-      "requirement": "Ensure build includes vfs_fonts bundle (no external CDNs) and add a single retry path that clears cached init state and retries once before surfacing the final error via existing Word→PDF error flow (without requiring page reload).",
-      "reason": "The diff still depends on external CDNs for pdfmake/vfs_fonts (so the bundle inclusion requirement is not met). A retry mechanism is hinted (MAX_INIT_RETRIES/initRetryCount), but the truncated diff does not provide clear evidence that cached init state is cleared and init is retried once, nor that the tool recovers without requiring a page reload.",
+      "requirement": "Add a backend-based Word-to-PDF conversion API that accepts an uploaded .docx and returns a downloadable PDF, and wire the frontend Convert action to call this backend API.",
+      "reason": "The frontend sends base64-encoded file data to actor.convertWordToPdf(base64Data), but the backend method signature is convertWordToPdf(docxFile : Text) and it constructs a URL parameter named docx from that Text via getWavedWordToPdfUrl(docxFile), implying it expects a URL (docxUrl) rather than uploaded file contents. There is no evidence of backend handling for uploaded .docx bytes/blob or decoding base64 into a document for conversion.",
       "evidence": [
-        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts: PDFMAKE_URL/PDFMAKE_FONTS_URL point to cdnjs; initRetryCount/MAX_INIT_RETRIES present but retry behavior is not shown in truncated content",
-        "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts: throws errors instructing user to refresh the page (suggesting reload dependence)"
+        "backend/main.mo",
+        "frontend/src/pages/tools/WordToPdfPage.tsx"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Reintroduced/retained CDN-based script injection loader for pdfmake/vfs_fonts (and JSZip) using document.head <script> tags and window globals.",
-      "reason": "BuildRequest explicitly forbids CDN/script-tag based loading for pdfMake or its fonts and requires local package imports; implementing/keeping this loader contradicts the request.",
+      "description": "Refactor/addition of a centralized tools catalog and related tools linking UI (TOOLS_CATALOG, ToolsGrid using catalog, RelatedToolsLinks component).",
+      "reason": "The BuildRequest is focused on removing pdfMake and rebuilding the Word-to-PDF upload/convert/download flow; it does not request broader homepage/catalog/SEO related-tools refactors.",
       "evidence": [
-        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts: PDFMAKE_URL/PDFMAKE_FONTS_URL/JSZIP_URL; loadScript() injects script into document.head; accesses (window as any).pdfMake"
+        "frontend/src/components/home/toolsCatalog.ts",
+        "frontend/src/components/home/ToolsGrid.tsx",
+        "frontend/src/components/seo/RelatedToolsLinks.tsx"
       ]
     },
     {
-      "description": "User-facing error messages instructing a page refresh to recover from pdfMake initialization failure.",
-      "reason": "REQ-4 requires recovery without requiring a page reload (with a single retry path). Adding/keeping messaging that tells the user to refresh is not requested and conflicts with the recovery requirement.",
+      "description": "Addition of generic base64 utility helpers (fileToBase64, base64ToBlob, etc.).",
+      "reason": "Not explicitly requested; it is an implementation helper for the conversion flow but not a stated requirement.",
       "evidence": [
-        "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts: 'PDF library failed to initialize. Please refresh the page and try again.' and 'PDF library fonts (VFS) not available. Please refresh the page and try again.'"
+        "frontend/src/lib/base64.ts"
       ]
     }
   ],
-  "confidence": 0.84,
+  "confidence": 0.64,
   "changed_files": [
+    "backend/main.mo",
     "frontend-file-summaries.txt",
+    "frontend/src/App.tsx",
+    "frontend/src/components/home/ToolsGrid.tsx",
+    "frontend/src/components/home/toolsCatalog.ts",
+    "frontend/src/components/seo/RelatedToolsLinks.tsx",
+    "frontend/src/components/tools/processors/conversion/index.ts",
     "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts",
     "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
+    "frontend/src/components/tools/toolError.ts",
+    "frontend/src/lib/base64.ts",
+    "frontend/src/pages/tools/WordToPdfPage.tsx",
     "project_state.json"
   ]
 }

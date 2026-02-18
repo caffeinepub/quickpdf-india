@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { RouterProvider, createRouter, createRoute, createRootRoute } from '@tanstack/react-router';
 import { SiteLayout } from './components/layout/SiteLayout';
 import HomePage from './pages/HomePage';
@@ -15,7 +14,6 @@ import ResizeImagePage from './pages/tools/ResizeImagePage';
 import BlogIndexPage from './pages/blog/BlogIndexPage';
 import HowToCompressPdfOnlinePage from './pages/blog/HowToCompressPdfOnlinePage';
 import ResizeImageUnder50KbPage from './pages/blog/ResizeImageUnder50KbPage';
-import { initPdfMake } from './components/tools/processors/conversion/wordToPdfLibraries';
 
 const rootRoute = createRootRoute({
   component: SiteLayout,
@@ -131,14 +129,5 @@ declare module '@tanstack/react-router' {
 }
 
 export default function App() {
-  // Initialize pdfMake at app startup
-  useEffect(() => {
-    initPdfMake().catch((error) => {
-      // Log error but don't crash the app
-      console.error('Failed to initialize pdfMake at startup:', error);
-      // The error will be handled when the user tries to use Word→PDF
-    });
-  }, []);
-
   return <RouterProvider router={router} />;
 }

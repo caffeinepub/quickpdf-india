@@ -38,26 +38,9 @@ export function normalizeToolError(
 function getFriendlyErrorSummary(error: ToolError): string {
   const msg = error.message.toLowerCase();
 
-  // pdfMake initialization errors - specific and actionable
-  if (msg.includes('pdfmake failed to load')) {
-    return 'PDF library failed to initialize. Please refresh the page and try again. If the problem persists, try clearing your browser cache.';
-  }
-
-  // Library loading/initialization errors - specific and actionable
-  if (msg.includes('pdf library failed to initialize')) {
-    return 'PDF library failed to initialize. Please refresh the page and try again.';
-  }
-
-  if (msg.includes('failed to load conversion libraries')) {
-    return 'Unable to load required conversion libraries. Please refresh the page and try again.';
-  }
-
-  if (msg.includes('load pdf processing library') || msg.includes('load zip library')) {
-    return 'Unable to load PDF processing libraries. Please refresh the page and try again.';
-  }
-
-  if (msg.includes('library failed to load') || msg.includes('library may not be properly initialized')) {
-    return 'Required libraries failed to initialize. Please refresh the page and try again.';
+  // Backend connection errors
+  if (msg.includes('backend connection not available')) {
+    return 'Backend connection not available. Please refresh the page and try again.';
   }
 
   // File validation errors
@@ -66,6 +49,10 @@ function getFriendlyErrorSummary(error: ToolError): string {
   }
 
   if (msg.includes('invalid file type') || msg.includes('unsupported file type')) {
+    return error.message; // Already user-friendly
+  }
+
+  if (msg.includes('only .docx files are supported')) {
     return error.message; // Already user-friendly
   }
 
@@ -116,14 +103,11 @@ function getFriendlyErrorSummary(error: ToolError): string {
   }
 
   if (error.toolId === 'word-to-pdf') {
-    if (msg.includes('no text content')) {
-      return 'No text content found in the Word document. The file may be empty, contain only images/tables, or use unsupported features.';
+    if (msg.includes('conversion failed')) {
+      return 'Word to PDF conversion failed. Please check your file and try again.';
     }
-    if (msg.includes('failed to extract text')) {
-      return 'Could not extract text from the Word document. The file may be corrupted or use unsupported features. Try saving it as a new .docx file and try again.';
-    }
-    if (msg.includes('failed to generate pdf')) {
-      return 'PDF generation failed. The document may be too complex. Try a simpler document or refresh the page and try again.';
+    if (msg.includes('failed to convert')) {
+      return 'Could not convert the Word document. The file may be corrupted or use unsupported features.';
     }
   }
 

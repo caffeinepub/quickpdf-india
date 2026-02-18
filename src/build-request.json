@@ -1,90 +1,121 @@
 {
   "kind": "build_request",
-  "title": "Restore Word→PDF conversion by fixing pdfMake VFS (fonts) initialization",
-  "projectName": "QuickPDF Tools",
-  "priority": "high",
+  "title": "Remove broken pdfMake Word-to-PDF and rebuild as stable upload/convert/download flow",
+  "projectName": "Word to PDF",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Replace the current CDN/script-tag based pdfMake loading in `frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts` with local package imports and explicit VFS initialization, using the exact pattern:\n\n```ts\nimport pdfMake from \"pdfmake/build/pdfmake\";\nimport pdfFonts from \"pdfmake/build/vfs_fonts\";\n\npdfMake.vfs = pdfFonts.pdfMake.vfs;\n```\n\nRemove any remaining reliance on `window.pdfMake` or injecting `<script>` tags for pdfMake or its fonts.",
+      "text": "Completely remove the existing client-side Word-to-PDF implementation and all pdfMake initialization/loading logic so the app no longer attempts to load pdfMake (including CDN scripts) or shows errors like \"PDF library failed to initialize\" / \"pdfMake failed to load\".",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Properly initialize pdfMake with fonts:\n\nimport pdfMake from \"pdfmake/build/pdfmake\";\nimport pdfFonts from \"pdfmake/build/vfs_fonts\";\n\npdfMake.vfs = pdfFonts.pdfMake.vfs;\n\n...\nRemove any broken CDN loading for pdfMake"
+          "Remove the existing \"Word to PDF\" feature completely because it is broken and showing errors like: \"PDF library failed to initialize\" and \"pdfMake failed to load\"",
+          "DO NOT use pdfMake",
+          "DO NOT use any unstable CDN libraries",
+          "IMPORTANT: Do not reuse old code. Start fresh and ensure it works properly."
         ]
       },
       "acceptanceCriteria": [
-        "`wordToPdfLibraries.ts` no longer defines CDN URLs for pdfMake or vfs_fonts and no longer injects scripts into `document.head`.",
-        "`initPdfMake()` uses the local imports and assigns `pdfMake.vfs = pdfFonts.pdfMake.vfs` before marking initialization successful.",
-        "Word→PDF conversion no longer throws: \"pdfMake failed to load - VFS (fonts) not available\"."
+        "Navigating anywhere in the app (including /word-to-pdf) does not load or reference pdfMake.",
+        "Remove the startup pdfMake initialization in frontend/src/App.tsx (no initPdfMake call on app mount).",
+        "Remove/retire the pdfMake-based modules (e.g., wordToPdfProcessor, wordToPdfLibraries) or refactor them so they are no longer used/referenced by the Word-to-PDF page.",
+        "No user-facing error messages referencing pdfMake appear during normal usage of the app."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Ensure `initPdfMake()` validates that `pdfFonts` is correctly loaded (not undefined) and that `pdfMake.vfs` is available before any PDF generation can proceed; keep the existing behavior that initialization is triggered at app startup (`frontend/src/App.tsx`) and that `loadConversionLibraries()` guarantees initialization before returning `pdfMake`.",
+      "text": "Rebuild the Word-to-PDF tool frontend as a simple 3-step UI (Upload Word file → Convert → Download PDF) using only stable, locally-bundled code (no CDN-loaded libraries). The UI must: show selected file name, show a loading indicator while converting, show a success message after conversion, use a clean visible green primary button, disable the Convert button while processing, and avoid confusing messages.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Ensure this runs BEFORE any PDF generation function",
-          "Make sure pdfFonts is correctly loaded and not undefined",
-          "Do NOT change working logic unnecessarily - Just restore the previous working state"
+          "Frontend:\n- Simple UI:\n  Step 1: Upload Word file\n  Step 2: Click Convert\n  Step 3: Download PDF\n\n- Show:\n  - Selected file name\n  - Loading indicator while converting\n  - Success message after conversion",
+          "UX:\n- Clean green button (visible)\n- Disable button while processing\n- No confusing messages",
+          "Use English for any user-facing text in the build request."
         ]
       },
       "acceptanceCriteria": [
-        "If `pdfFonts` is undefined or `pdfFonts.pdfMake.vfs` is missing, initialization fails with a clear error indicating fonts/VFS are unavailable.",
-        "`wordToPdfProcessor` continues to call `loadConversionLibraries()` and receives an initialized `pdfMake` whose `createPdf` function exists and whose `vfs` is an object."
+        "The /word-to-pdf page clearly presents the 3 steps and a single primary green Convert button.",
+        "After selecting a file, the page displays the selected file name.",
+        "When conversion is in progress, the Convert button is disabled and shows a loading state (e.g., button text changes to \"Converting...\" and/or a spinner).",
+        "On success, the page shows a clear success message in English and provides a Download PDF action that downloads the converted PDF.",
+        "All user-facing strings on this tool page are in English."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Add debug logging during pdfMake initialization (not only during conversion) to print both objects:\n\n```ts\nconsole.log(pdfMake);\nconsole.log(pdfFonts);\n```\n\nEnsure logs execute as part of `initPdfMake()` before any PDF generation attempts.",
+      "text": "Implement strict file validation for the Word-to-PDF tool: accept only .docx files, enforce a 10MB maximum file size, and show a clear English error message when the file type or file size is invalid.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "Add console check:\nconsole.log(pdfMake);\nconsole.log(pdfFonts);\n\nEnsure logs run during initialization (not only after conversion begins)."
+          "File handling:\n- Accept only .docx\n- Limit file size (10MB)\n- Show error if invalid file"
         ]
       },
       "acceptanceCriteria": [
-        "When the app starts (or when `initPdfMake()` is invoked), the browser console shows logs for `pdfMake` and `pdfFonts` objects.",
-        "Logs occur before `wordToPdfProcessor` generates a PDF."
+        "The upload control rejects non-.docx files and surfaces an English validation error (no conversion attempt is started).",
+        "Files larger than 10MB are rejected with an English validation error (no conversion attempt is started).",
+        "The Convert button is not enabled unless exactly one valid .docx file (<=10MB) is selected."
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Ensure the build includes the `vfs_fonts` bundle and the Word→PDF tool can recover to a working state without requiring a page reload; if initialization still fails at runtime, provide a single retry path (clearing any cached initialization state) before surfacing the final error via the existing Word→PDF error flow.",
-      "target": "frontend",
+      "text": "Add a backend-based Word-to-PDF conversion API that accepts an uploaded .docx and returns a downloadable PDF, and wire the frontend Convert action to call this backend API.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "If pdfMake still fails:\n- Reinstall the library properly\n- Ensure build includes vfs_fonts",
-          "Goal:\nMake Word to PDF work again like before without errors"
+          "Use a reliable backend-based approach:\n\nBackend (Node.js):\n- Use LibreOffice (headless mode) for conversion\n- Accept .docx file upload\n- Convert to PDF\n- Return downloadable file",
+          "Build a fresh, working Word to PDF tool"
         ]
       },
       "acceptanceCriteria": [
-        "A production build includes the `pdfmake/build/vfs_fonts` code and does not depend on external CDNs.",
-        "If the first initialization attempt fails, the loader retries once after clearing cached state; after the retry, errors are surfaced through the existing tool error handling in English."
+        "Clicking Convert uploads the selected .docx to the backend conversion endpoint and waits for a response.",
+        "On success, the frontend receives PDF bytes/blob and enables downloading a .pdf file with a filename derived from the original (.docx → .pdf).",
+        "If the backend returns an error, the frontend shows a clear English error message and returns to an idle state (Convert becomes enabled again)."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Remove or update any tool metadata, copy, and UX that claims Word-to-PDF conversion happens “in your browser” and ensure the Word-to-PDF page content matches the new backend-based flow (still keeping messages simple and non-confusing).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Use a reliable backend-based approach",
+          "No confusing messages"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Word-to-PDF page no longer claims conversion happens locally/in-browser.",
+        "The page description/help text is minimal, clear, and consistent with a backend conversion flow.",
+        "No references to pdfMake or CDN loading appear in the Word-to-PDF tool UI."
       ]
     }
   ],
   "constraints": [
-    "Do not modify unrelated PDF tool logic (merge/split/compress/watermark/etc.) beyond what is required to restore Word→PDF.",
-    "Do not introduce or keep any CDN/script-tag based loading for pdfMake or its fonts.",
-    "Do not edit files under `frontend/src/components/ui` or any other immutable paths listed in SYSTEM_CONTEXT."
+    "Backend must remain a single Motoko actor (backend/main.mo); do not introduce Node.js services into this project.",
+    "LibreOffice headless cannot run inside a Motoko canister; implementing “Node.js + LibreOffice” as described is not possible within this platform. If backend-based conversion is required, an alternative approach must be chosen (e.g., integrating with a user-provided stable external conversion HTTP API) while keeping frontend free of CDN libraries and pdfMake.",
+    "Do not edit files under frontend/src/components/ui (read-only).",
+    "Do not edit immutable hook/bootstrap files: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx."
   ],
   "nonGoals": [
-    "Improving Word→PDF fidelity beyond the current text-extraction approach (formatting, images, tables).",
-    "Adding new features or UI beyond what is necessary to restore the previous working Word→PDF behavior."
+    "Adding additional document formats beyond .docx (e.g., .doc).",
+    "Adding advanced conversion options (page size, margins, OCR, preserving complex formatting controls).",
+    "Adding user accounts/auth changes for this tool.",
+    "Rebuilding unrelated PDF tools (merge/split/compress/etc.)."
   ],
   "imageRequirements": {
     "required": [],
@@ -93,9 +124,7 @@
   "userProfileUpdate": {
     "goalsToAdd": [],
     "goalsToRemove": [],
-    "preferencesToAdd": [
-      "Use English for any user-facing text."
-    ],
+    "preferencesToAdd": [],
     "preferencesToRemove": [],
     "miscToAdd": [],
     "miscToRemove": [],

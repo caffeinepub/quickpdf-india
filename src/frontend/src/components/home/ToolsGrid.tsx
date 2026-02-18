@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from '@tanstack/react-router';
-import { toolsCatalog } from './toolsCatalog';
+import { TOOLS_CATALOG } from './toolsCatalog';
 
 export function ToolsGrid() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export function ToolsGrid() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {toolsCatalog.map((tool) => (
+        {TOOLS_CATALOG.map((tool) => (
           <Card key={tool.id} className="transition-shadow hover:shadow-lg">
             <CardHeader>
               <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-[#2ecc71]/10">

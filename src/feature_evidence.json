@@ -2,10 +2,14 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-replace-the-current-cdn-script-tag-based-pdfmake-loading-in-frontend-src-components-tools-processors-conversion-wordtopdflibraries-ts-with-local-package-imports-and-explicit-vfs-initialization-using-the-exact-pattern-ts-import-pdfmake-from-pdfmake-build-pdfmake-import-pdffonts-from-pdfmake-build-vfs-fonts-pdfmake-vfs-pdffonts-pdfmake-vfs-remove-any-remaining-reliance-on-window-pdfmake-or-injecting-script-tags-for-pdfmake-or-its-fonts",
-      "featureTitle": "Replace the current CDN/script-tag based pdfMake loading in `frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts` with local package imports and explicit VFS initialization, using the exact pattern:\n\n```ts\nimport pdfMake from \"pdfmake/build/pdfmake\";\nimport pdfFonts from \"pdfmake/build/vfs_fonts\";\n\npdfMake.vfs = pdfFonts.pdfMake.vfs;\n```\n\nRemove any remaining reliance on `window.pdfMake` or injecting `<script>` tags for pdfMake or its fonts.",
+      "featureId": "feature-completely-remove-the-existing-client-side-word-to-pdf-implementation-and-all-pdfmake-initialization-loading-logic-so-the-app-no-longer-attempts-to-load-pdfmake-including-cdn-scripts-or-shows-errors-like-pdf-library-failed-to-initialize-pdfmake-failed-to-load",
+      "featureTitle": "Completely remove the existing client-side Word-to-PDF implementation and all pdfMake initialization/loading logic so the app no longer attempts to load pdfMake (including CDN scripts) or shows errors like \"PDF library failed to initialize\" / \"pdfMake failed to load\".",
       "files": [
-        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts"
+        "frontend/src/App.tsx",
+        "frontend/src/components/tools/processors/conversion/index.ts",
+        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts",
+        "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
+        "frontend/src/pages/tools/WordToPdfPage.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -13,7 +17,8 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
       ],
       "testIds": [
         "REQ-1"
@@ -21,11 +26,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-initpdfmake-validates-that-pdffonts-is-correctly-loaded-not-undefined-and-that-pdfmake-vfs-is-available-before-any-pdf-generation-can-proceed-keep-the-existing-behavior-that-initialization-is-triggered-at-app-startup-frontend-src-app-tsx-and-that-loadconversionlibraries-guarantees-initialization-before-returning-pdfmake",
-      "featureTitle": "Ensure `initPdfMake()` validates that `pdfFonts` is correctly loaded (not undefined) and that `pdfMake.vfs` is available before any PDF generation can proceed; keep the existing behavior that initialization is triggered at app startup (`frontend/src/App.tsx`) and that `loadConversionLibraries()` guarantees initialization before returning `pdfMake`.",
+      "featureId": "feature-rebuild-the-word-to-pdf-tool-frontend-as-a-simple-3-step-ui-upload-word-file-convert-download-pdf-using-only-stable-locally-bundled-code-no-cdn-loaded-libraries-the-ui-must-show-selected-file-name-show-a-loading-indicator-while-converting-show-a-success-message-after-conversion-use-a-clean-visible-green-primary-button-disable-the-convert-button-while-processing-and-avoid-confusing-messages",
+      "featureTitle": "Rebuild the Word-to-PDF tool frontend as a simple 3-step UI (Upload Word file → Convert → Download PDF) using only stable, locally-bundled code (no CDN-loaded libraries). The UI must: show selected file name, show a loading indicator while converting, show a success message after conversion, use a clean visible green primary button, disable the Convert button while processing, and avoid confusing messages.",
       "files": [
-        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts",
-        "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts"
+        "frontend/src/pages/tools/WordToPdfPage.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -33,7 +37,8 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
       ],
       "testIds": [
         "REQ-2"
@@ -41,10 +46,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-debug-logging-during-pdfmake-initialization-not-only-during-conversion-to-print-both-objects-ts-console-log-pdfmake-console-log-pdffonts-ensure-logs-execute-as-part-of-initpdfmake-before-any-pdf-generation-attempts",
-      "featureTitle": "Add debug logging during pdfMake initialization (not only during conversion) to print both objects:\n\n```ts\nconsole.log(pdfMake);\nconsole.log(pdfFonts);\n```\n\nEnsure logs execute as part of `initPdfMake()` before any PDF generation attempts.",
+      "featureId": "feature-implement-strict-file-validation-for-the-word-to-pdf-tool-accept-only-docx-files-enforce-a-10mb-maximum-file-size-and-show-a-clear-english-error-message-when-the-file-type-or-file-size-is-invalid",
+      "featureTitle": "Implement strict file validation for the Word-to-PDF tool: accept only .docx files, enforce a 10MB maximum file size, and show a clear English error message when the file type or file size is invalid.",
       "files": [
-        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts"
+        "frontend/src/pages/tools/WordToPdfPage.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -52,7 +57,8 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
       ],
       "testIds": [
         "REQ-3"
@@ -60,10 +66,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-the-build-includes-the-vfs-fonts-bundle-and-the-word-pdf-tool-can-recover-to-a-working-state-without-requiring-a-page-reload-if-initialization-still-fails-at-runtime-provide-a-single-retry-path-clearing-any-cached-initialization-state-before-surfacing-the-final-error-via-the-existing-word-pdf-error-flow",
-      "featureTitle": "Ensure the build includes the `vfs_fonts` bundle and the Word→PDF tool can recover to a working state without requiring a page reload; if initialization still fails at runtime, provide a single retry path (clearing any cached initialization state) before surfacing the final error via the existing Word→PDF error flow.",
+      "featureId": "feature-add-a-backend-based-word-to-pdf-conversion-api-that-accepts-an-uploaded-docx-and-returns-a-downloadable-pdf-and-wire-the-frontend-convert-action-to-call-this-backend-api",
+      "featureTitle": "Add a backend-based Word-to-PDF conversion API that accepts an uploaded .docx and returns a downloadable PDF, and wire the frontend Convert action to call this backend API.",
       "files": [
-        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts"
+        "frontend/src/components/tools/toolError.ts",
+        "frontend/src/lib/base64.ts",
+        "frontend/src/pages/tools/WordToPdfPage.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -71,10 +79,32 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
       ],
       "testIds": [
         "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-remove-or-update-any-tool-metadata-copy-and-ux-that-claims-word-to-pdf-conversion-happens-in-your-browser-and-ensure-the-word-to-pdf-page-content-matches-the-new-backend-based-flow-still-keeping-messages-simple-and-non-confusing",
+      "featureTitle": "Remove or update any tool metadata, copy, and UX that claims Word-to-PDF conversion happens “in your browser” and ensure the Word-to-PDF page content matches the new backend-based flow (still keeping messages simple and non-confusing).",
+      "files": [
+        "frontend/src/components/home/toolsCatalog.ts",
+        "frontend/src/pages/tools/WordToPdfPage.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "http-outcalls@3.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
       ],
       "confidence": "high"
     }

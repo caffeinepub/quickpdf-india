@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toolsCatalog } from '../home/toolsCatalog';
+import { TOOLS_CATALOG } from '../home/toolsCatalog';
 
 interface RelatedToolsLinksProps {
   currentToolId: string;
@@ -8,7 +8,7 @@ interface RelatedToolsLinksProps {
 }
 
 export function RelatedToolsLinks({ currentToolId, relatedToolIds }: RelatedToolsLinksProps) {
-  const relatedTools = toolsCatalog.filter(
+  const relatedTools = TOOLS_CATALOG.filter(
     (tool) => relatedToolIds.includes(tool.id) && tool.id !== currentToolId
   );
 

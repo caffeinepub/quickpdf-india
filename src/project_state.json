@@ -1,50 +1,67 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "PDF tools website; currently fixing broken Word-to-PDF conversion caused by pdfMake VFS (fonts) not being available.",
+  "summary": "Build a simple, stable Word-to-PDF conversion tool using a Node.js backend with LibreOffice headless, plus a minimal frontend upload/convert/download UI (no pdfMake or unstable CDNs).",
   "architectural_notes": [
-    "Initialize pdfMake with vfs_fonts (pdfMake.vfs = pdfFonts.pdfMake.vfs) before any PDF generation; avoid/bypass broken CDN loading for pdfMake and ensure vfs_fonts is bundled/loaded correctly."
+    "Do not use pdfMake.",
+    "Do not rely on unstable CDN libraries; prefer local dependencies.",
+    "Backend: Node.js service handles .docx upload, converts to PDF using LibreOffice in headless mode, returns downloadable PDF."
   ],
   "known_issues": [
-    "Word to PDF conversion broken: \"pdfMake failed to load - VFS (fonts) not available\" (pdfMake fonts/VFS not initialized or vfs_fonts missing/undefined)."
+    "Existing Word-to-PDF implementation is broken with errors: \"PDF library failed to initialize\" and \"pdfMake failed to load\"."
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-replace-the-current-cdn-script-tag-based-pdfmake-loading-in-frontend-src-components-tools-processors-conversion-wordtopdflibraries-ts-with-local-package-imports-and-explicit-vfs-initialization-using-the-exact-pattern-ts-import-pdfmake-from-pdfmake-build-pdfmake-import-pdffonts-from-pdfmake-build-vfs-fonts-pdfmake-vfs-pdffonts-pdfmake-vfs-remove-any-remaining-reliance-on-window-pdfmake-or-injecting-script-tags-for-pdfmake-or-its-fonts",
-      "title": "Replace the current CDN/script-tag based pdfMake loading in `frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts` with local package imports and explicit VFS initialization, using the exact pattern:\n\n```ts\nimport pdfMake from \"pdfmake/build/pdfmake\";\nimport pdfFonts from \"pdfmake/build/vfs_fonts\";\n\npdfMake.vfs = pdfFonts.pdfMake.vfs;\n```\n\nRemove any remaining reliance on `window.pdfMake` or injecting `<script>` tags for pdfMake or its fonts.",
+      "id": "feature-completely-remove-the-existing-client-side-word-to-pdf-implementation-and-all-pdfmake-initialization-loading-logic-so-the-app-no-longer-attempts-to-load-pdfmake-including-cdn-scripts-or-shows-errors-like-pdf-library-failed-to-initialize-pdfmake-failed-to-load",
+      "title": "Completely remove the existing client-side Word-to-PDF implementation and all pdfMake initialization/loading logic so the app no longer attempts to load pdfMake (including CDN scripts) or shows errors like \"PDF library failed to initialize\" / \"pdfMake failed to load\".",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-ensure-initpdfmake-validates-that-pdffonts-is-correctly-loaded-not-undefined-and-that-pdfmake-vfs-is-available-before-any-pdf-generation-can-proceed-keep-the-existing-behavior-that-initialization-is-triggered-at-app-startup-frontend-src-app-tsx-and-that-loadconversionlibraries-guarantees-initialization-before-returning-pdfmake",
-      "title": "Ensure `initPdfMake()` validates that `pdfFonts` is correctly loaded (not undefined) and that `pdfMake.vfs` is available before any PDF generation can proceed; keep the existing behavior that initialization is triggered at app startup (`frontend/src/App.tsx`) and that `loadConversionLibraries()` guarantees initialization before returning `pdfMake`.",
+      "id": "feature-rebuild-the-word-to-pdf-tool-frontend-as-a-simple-3-step-ui-upload-word-file-convert-download-pdf-using-only-stable-locally-bundled-code-no-cdn-loaded-libraries-the-ui-must-show-selected-file-name-show-a-loading-indicator-while-converting-show-a-success-message-after-conversion-use-a-clean-visible-green-primary-button-disable-the-convert-button-while-processing-and-avoid-confusing-messages",
+      "title": "Rebuild the Word-to-PDF tool frontend as a simple 3-step UI (Upload Word file → Convert → Download PDF) using only stable, locally-bundled code (no CDN-loaded libraries). The UI must: show selected file name, show a loading indicator while converting, show a success message after conversion, use a clean visible green primary button, disable the Convert button while processing, and avoid confusing messages.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-debug-logging-during-pdfmake-initialization-not-only-during-conversion-to-print-both-objects-ts-console-log-pdfmake-console-log-pdffonts-ensure-logs-execute-as-part-of-initpdfmake-before-any-pdf-generation-attempts",
-      "title": "Add debug logging during pdfMake initialization (not only during conversion) to print both objects:\n\n```ts\nconsole.log(pdfMake);\nconsole.log(pdfFonts);\n```\n\nEnsure logs execute as part of `initPdfMake()` before any PDF generation attempts.",
+      "id": "feature-implement-strict-file-validation-for-the-word-to-pdf-tool-accept-only-docx-files-enforce-a-10mb-maximum-file-size-and-show-a-clear-english-error-message-when-the-file-type-or-file-size-is-invalid",
+      "title": "Implement strict file validation for the Word-to-PDF tool: accept only .docx files, enforce a 10MB maximum file size, and show a clear English error message when the file type or file size is invalid.",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-ensure-the-build-includes-the-vfs-fonts-bundle-and-the-word-pdf-tool-can-recover-to-a-working-state-without-requiring-a-page-reload-if-initialization-still-fails-at-runtime-provide-a-single-retry-path-clearing-any-cached-initialization-state-before-surfacing-the-final-error-via-the-existing-word-pdf-error-flow",
-      "title": "Ensure the build includes the `vfs_fonts` bundle and the Word→PDF tool can recover to a working state without requiring a page reload; if initialization still fails at runtime, provide a single retry path (clearing any cached initialization state) before surfacing the final error via the existing Word→PDF error flow.",
+      "id": "feature-add-a-backend-based-word-to-pdf-conversion-api-that-accepts-an-uploaded-docx-and-returns-a-downloadable-pdf-and-wire-the-frontend-convert-action-to-call-this-backend-api",
+      "title": "Add a backend-based Word-to-PDF conversion API that accepts an uploaded .docx and returns a downloadable PDF, and wire the frontend Convert action to call this backend API.",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-remove-or-update-any-tool-metadata-copy-and-ux-that-claims-word-to-pdf-conversion-happens-in-your-browser-and-ensure-the-word-to-pdf-page-content-matches-the-new-backend-based-flow-still-keeping-messages-simple-and-non-confusing",
+      "title": "Remove or update any tool metadata, copy, and UX that claims Word-to-PDF conversion happens “in your browser” and ensure the Word-to-PDF page content matches the new backend-based flow (still keeping messages simple and non-confusing).",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
     }
   ],
-  "new_feature_requests": [],
-  "projectName": "QuickPDF Tools",
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Rebuild Word-to-PDF tool from scratch: Node.js backend upload .docx (10MB max), convert via LibreOffice headless, return downloadable PDF; minimal frontend with file name, loading state, success/error messaging, and disabled convert button while processing (no pdfMake/CDN libs).",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Word to PDF",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

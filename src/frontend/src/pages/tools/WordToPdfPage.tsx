@@ -4,14 +4,19 @@ import { ToolExperience } from '@/components/tools/ToolExperience';
 import { RelatedToolsLinks } from '@/components/seo/RelatedToolsLinks';
 import { ToolFaq } from '@/components/faq/ToolFaq';
 import { useToolJob } from '@/hooks/useToolJob';
-import { wordToPdfProcessor } from '@/components/tools/processors/conversion/wordToPdfProcessor';
 import { normalizeToolError } from '@/components/tools/toolError';
 import { ToolPrimaryActionButton } from '@/components/tools/ToolPrimaryActionButton';
 import { FileText } from 'lucide-react';
+import { useActor } from '@/hooks/useActor';
+import { fileToBase64 } from '@/lib/base64';
+
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 export default function WordToPdfPage() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const job = useToolJob();
+  const { actor } = useActor();
 
   // Scroll to top on mount
   useEffect(() => {
@@ -40,19 +45,77 @@ export default function WordToPdfPage() {
       return;
     }
 
+    const file = selectedFiles[0];
+
+    // Validate file type
+    if (!file.name.toLowerCase().endsWith('.docx')) {
+      job.setError(
+        normalizeToolError(
+          new Error('Only .docx files are supported. Please select a valid Word document.'),
+          'word-to-pdf',
+          'validation'
+        )
+      );
+      return;
+    }
+
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      job.setError(
+        normalizeToolError(
+          new Error(`File size exceeds ${MAX_FILE_SIZE_MB}MB limit. Please use a smaller file.`),
+          'word-to-pdf',
+          'validation'
+        )
+      );
+      return;
+    }
+
+    if (!actor) {
+      job.setError(
+        normalizeToolError(
+          new Error('Backend connection not available. Please refresh the page and try again.'),
+          'word-to-pdf',
+          'processing'
+        )
+      );
+      return;
+    }
+
     try {
       job.startProcessing();
+      job.updateProgress(10);
 
-      const resultBlob = await wordToPdfProcessor(selectedFiles[0], {
-        onProgress: (progress) => {
-          job.updateProgress(progress);
-        },
-      });
+      // Convert file to base64
+      const base64Data = await fileToBase64(file);
+      job.updateProgress(30);
 
-      const fileName = selectedFiles[0].name.replace(/\.(docx?|doc)$/i, '.pdf');
-      job.completeProcessing(fileName, resultBlob);
-    } catch (error) {
-      job.setError(normalizeToolError(error, 'word-to-pdf', 'processing'));
+      // Call backend conversion
+      const pdfBase64 = await actor.convertWordToPdf(base64Data);
+      job.updateProgress(80);
+
+      // Convert base64 response to blob
+      const binaryString = atob(pdfBase64);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const pdfBlob = new Blob([bytes], { type: 'application/pdf' });
+
+      job.updateProgress(100);
+
+      // Generate output filename
+      const fileName = file.name.replace(/\.docx$/i, '.pdf');
+      job.completeProcessing(fileName, pdfBlob);
+    } catch (error: any) {
+      console.error('Word to PDF conversion error:', error);
+      job.setError(
+        normalizeToolError(
+          error?.message || error || 'Conversion failed',
+          'word-to-pdf',
+          'processing'
+        )
+      );
     }
   };
 
@@ -64,21 +127,21 @@ export default function WordToPdfPage() {
   const faqs = [
     {
       question: 'What Word formats are supported?',
-      answer: 'We support .docx (Word 2007 and later) files. Older .doc files may not work correctly.',
-    },
-    {
-      question: 'Will my formatting be preserved?',
-      answer:
-        'This tool extracts text content only. Complex formatting, images, tables, and special elements may not be preserved in the PDF. For best results, use simple text documents.',
+      answer: 'We support .docx (Word 2007 and later) files.',
     },
     {
       question: 'What is the maximum file size?',
       answer: 'The maximum file size is 10MB for Word to PDF conversion.',
     },
     {
+      question: 'How long does conversion take?',
+      answer:
+        'Conversion typically takes a few seconds depending on the file size and complexity of your document.',
+    },
+    {
       question: 'Is my document secure?',
       answer:
-        'Yes! All conversion happens in your browser. Your files never leave your device and are not uploaded to any server.',
+        'Yes! Your document is processed securely and is not stored on our servers after conversion.',
     },
   ];
 
@@ -89,23 +152,23 @@ export default function WordToPdfPage() {
     <>
       <Seo
         title="Word to PDF Converter"
-        description="Convert Word documents to PDF online for free. Fast, secure, and works in your browser. No upload required."
+        description="Convert Word documents to PDF online for free. Fast, secure, and easy to use."
       />
       <div className="container py-12">
         <div className="mx-auto max-w-4xl space-y-12">
           <div className="space-y-4">
             <h1 className="text-4xl font-bold">Word to PDF Converter</h1>
             <p className="text-lg text-muted-foreground">
-              Convert your Word documents (.docx) to PDF format instantly. All processing happens
-              securely in your browser - no upload required.
+              Convert your Word documents (.docx) to PDF format quickly and securely.
             </p>
           </div>
 
           <ToolExperience
             onFilesSelected={handleFilesSelected}
-            acceptedFileTypes=".docx,.doc"
+            acceptedFileTypes=".docx"
             maxFiles={1}
             fileType="conversion"
+            maxFileSizeBytes={MAX_FILE_SIZE_BYTES}
             jobStatus={job.jobStatus}
             progress={job.progress}
             resultFile={job.resultFile}
@@ -119,8 +182,7 @@ export default function WordToPdfPage() {
                 <div className="space-y-2">
                   <h3 className="text-lg font-semibold">Ready to Convert</h3>
                   <p className="text-sm text-muted-foreground">
-                    Click the button below to convert your Word document to PDF. Note: This tool
-                    extracts text content only. Complex formatting may not be preserved.
+                    Click the button below to convert your Word document to PDF.
                   </p>
                 </div>
                 <ToolPrimaryActionButton
