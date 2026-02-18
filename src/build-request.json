@@ -1,0 +1,105 @@
+{
+  "kind": "build_request",
+  "title": "Restore Word→PDF conversion by fixing pdfMake VFS (fonts) initialization",
+  "projectName": "QuickPDF Tools",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Replace the current CDN/script-tag based pdfMake loading in `frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts` with local package imports and explicit VFS initialization, using the exact pattern:\n\n```ts\nimport pdfMake from \"pdfmake/build/pdfmake\";\nimport pdfFonts from \"pdfmake/build/vfs_fonts\";\n\npdfMake.vfs = pdfFonts.pdfMake.vfs;\n```\n\nRemove any remaining reliance on `window.pdfMake` or injecting `<script>` tags for pdfMake or its fonts.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Properly initialize pdfMake with fonts:\n\nimport pdfMake from \"pdfmake/build/pdfmake\";\nimport pdfFonts from \"pdfmake/build/vfs_fonts\";\n\npdfMake.vfs = pdfFonts.pdfMake.vfs;\n\n...\nRemove any broken CDN loading for pdfMake"
+        ]
+      },
+      "acceptanceCriteria": [
+        "`wordToPdfLibraries.ts` no longer defines CDN URLs for pdfMake or vfs_fonts and no longer injects scripts into `document.head`.",
+        "`initPdfMake()` uses the local imports and assigns `pdfMake.vfs = pdfFonts.pdfMake.vfs` before marking initialization successful.",
+        "Word→PDF conversion no longer throws: \"pdfMake failed to load - VFS (fonts) not available\"."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Ensure `initPdfMake()` validates that `pdfFonts` is correctly loaded (not undefined) and that `pdfMake.vfs` is available before any PDF generation can proceed; keep the existing behavior that initialization is triggered at app startup (`frontend/src/App.tsx`) and that `loadConversionLibraries()` guarantees initialization before returning `pdfMake`.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Ensure this runs BEFORE any PDF generation function",
+          "Make sure pdfFonts is correctly loaded and not undefined",
+          "Do NOT change working logic unnecessarily - Just restore the previous working state"
+        ]
+      },
+      "acceptanceCriteria": [
+        "If `pdfFonts` is undefined or `pdfFonts.pdfMake.vfs` is missing, initialization fails with a clear error indicating fonts/VFS are unavailable.",
+        "`wordToPdfProcessor` continues to call `loadConversionLibraries()` and receives an initialized `pdfMake` whose `createPdf` function exists and whose `vfs` is an object."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add debug logging during pdfMake initialization (not only during conversion) to print both objects:\n\n```ts\nconsole.log(pdfMake);\nconsole.log(pdfFonts);\n```\n\nEnsure logs execute as part of `initPdfMake()` before any PDF generation attempts.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Add console check:\nconsole.log(pdfMake);\nconsole.log(pdfFonts);\n\nEnsure logs run during initialization (not only after conversion begins)."
+        ]
+      },
+      "acceptanceCriteria": [
+        "When the app starts (or when `initPdfMake()` is invoked), the browser console shows logs for `pdfMake` and `pdfFonts` objects.",
+        "Logs occur before `wordToPdfProcessor` generates a PDF."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Ensure the build includes the `vfs_fonts` bundle and the Word→PDF tool can recover to a working state without requiring a page reload; if initialization still fails at runtime, provide a single retry path (clearing any cached initialization state) before surfacing the final error via the existing Word→PDF error flow.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "If pdfMake still fails:\n- Reinstall the library properly\n- Ensure build includes vfs_fonts",
+          "Goal:\nMake Word to PDF work again like before without errors"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A production build includes the `pdfmake/build/vfs_fonts` code and does not depend on external CDNs.",
+        "If the first initialization attempt fails, the loader retries once after clearing cached state; after the retry, errors are surfaced through the existing tool error handling in English."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify unrelated PDF tool logic (merge/split/compress/watermark/etc.) beyond what is required to restore Word→PDF.",
+    "Do not introduce or keep any CDN/script-tag based loading for pdfMake or its fonts.",
+    "Do not edit files under `frontend/src/components/ui` or any other immutable paths listed in SYSTEM_CONTEXT."
+  ],
+  "nonGoals": [
+    "Improving Word→PDF fidelity beyond the current text-extraction approach (formatting, images, tables).",
+    "Adding new features or UI beyond what is necessary to restore the previous working Word→PDF behavior."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [
+      "Use English for any user-facing text."
+    ],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

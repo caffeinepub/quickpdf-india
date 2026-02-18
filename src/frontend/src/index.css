@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Green-themed color system using OKLCH */
+    --background: oklch(98% 0.01 120);
+    --foreground: oklch(20% 0.02 120);
+    --card: oklch(100% 0 0);
+    --card-foreground: oklch(20% 0.02 120);
+    --popover: oklch(100% 0 0);
+    --popover-foreground: oklch(20% 0.02 120);
+    
+    /* Primary: Green theme (#22c55e family) */
+    --primary: oklch(65% 0.20 145);
+    --primary-foreground: oklch(100% 0 0);
+    
+    --secondary: oklch(95% 0.02 120);
+    --secondary-foreground: oklch(20% 0.02 120);
+    
+    --muted: oklch(96% 0.01 120);
+    --muted-foreground: oklch(50% 0.02 120);
+    
+    --accent: oklch(95% 0.02 145);
+    --accent-foreground: oklch(20% 0.02 120);
+    
+    --destructive: oklch(55% 0.20 25);
+    --destructive-foreground: oklch(100% 0 0);
+    
+    --border: oklch(90% 0.01 120);
+    --input: oklch(90% 0.01 120);
+    --ring: oklch(65% 0.20 145);
+    
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: oklch(15% 0.02 120);
+    --foreground: oklch(95% 0.01 120);
+    --card: oklch(18% 0.02 120);
+    --card-foreground: oklch(95% 0.01 120);
+    --popover: oklch(18% 0.02 120);
+    --popover-foreground: oklch(95% 0.01 120);
+    
+    --primary: oklch(65% 0.20 145);
+    --primary-foreground: oklch(10% 0.02 120);
+    
+    --secondary: oklch(25% 0.02 120);
+    --secondary-foreground: oklch(95% 0.01 120);
+    
+    --muted: oklch(25% 0.02 120);
+    --muted-foreground: oklch(65% 0.02 120);
+    
+    --accent: oklch(25% 0.02 145);
+    --accent-foreground: oklch(95% 0.01 120);
+    
+    --destructive: oklch(55% 0.20 25);
+    --destructive-foreground: oklch(100% 0 0);
+    
+    --border: oklch(30% 0.02 120);
+    --input: oklch(30% 0.02 120);
+    --ring: oklch(65% 0.20 145);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom prose styles for blog content */
+@layer components {
+  .prose {
+    @apply max-w-none text-foreground;
+  }
+  
+  .prose h1 {
+    @apply text-3xl font-bold mb-4 mt-8;
+  }
+  
+  .prose h2 {
+    @apply text-2xl font-semibold mb-3 mt-6;
+  }
+  
+  .prose h3 {
+    @apply text-xl font-semibold mb-2 mt-4;
+  }
+  
+  .prose p {
+    @apply mb-4 leading-relaxed;
+  }
+  
+  .prose ul, .prose ol {
+    @apply mb-4 ml-6;
+  }
+  
+  .prose li {
+    @apply mb-2;
+  }
+  
+  .prose strong {
+    @apply font-semibold text-foreground;
+  }
+  
+  .prose a {
+    @apply text-primary hover:underline;
+  }
+  
+  .prose code {
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm;
+  }
+  
+  .prose blockquote {
+    @apply border-l-4 border-primary pl-4 italic my-4;
+  }
+}
+
+/* Tool section utilities */
+@layer utilities {
+  .tool-section {
+    @apply space-y-6 rounded-lg border border-border bg-card p-6 shadow-sm;
+  }
+  
+  .tool-section-highlight {
+    @apply border-2 border-primary/20 shadow-md;
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-replace-the-current-cdn-script-tag-based-pdfmake-loading-in-frontend-src-components-tools-processors-conversion-wordtopdflibraries-ts-with-local-package-imports-and-explicit-vfs-initialization-using-the-exact-pattern-ts-import-pdfmake-from-pdfmake-build-pdfmake-import-pdffonts-from-pdfmake-build-vfs-fonts-pdfmake-vfs-pdffonts-pdfmake-vfs-remove-any-remaining-reliance-on-window-pdfmake-or-injecting-script-tags-for-pdfmake-or-its-fonts",
+      "featureTitle": "Replace the current CDN/script-tag based pdfMake loading in `frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts` with local package imports and explicit VFS initialization, using the exact pattern:\n\n```ts\nimport pdfMake from \"pdfmake/build/pdfmake\";\nimport pdfFonts from \"pdfmake/build/vfs_fonts\";\n\npdfMake.vfs = pdfFonts.pdfMake.vfs;\n```\n\nRemove any remaining reliance on `window.pdfMake` or injecting `<script>` tags for pdfMake or its fonts.",
+      "files": [
+        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-initpdfmake-validates-that-pdffonts-is-correctly-loaded-not-undefined-and-that-pdfmake-vfs-is-available-before-any-pdf-generation-can-proceed-keep-the-existing-behavior-that-initialization-is-triggered-at-app-startup-frontend-src-app-tsx-and-that-loadconversionlibraries-guarantees-initialization-before-returning-pdfmake",
+      "featureTitle": "Ensure `initPdfMake()` validates that `pdfFonts` is correctly loaded (not undefined) and that `pdfMake.vfs` is available before any PDF generation can proceed; keep the existing behavior that initialization is triggered at app startup (`frontend/src/App.tsx`) and that `loadConversionLibraries()` guarantees initialization before returning `pdfMake`.",
+      "files": [
+        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts",
+        "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-debug-logging-during-pdfmake-initialization-not-only-during-conversion-to-print-both-objects-ts-console-log-pdfmake-console-log-pdffonts-ensure-logs-execute-as-part-of-initpdfmake-before-any-pdf-generation-attempts",
+      "featureTitle": "Add debug logging during pdfMake initialization (not only during conversion) to print both objects:\n\n```ts\nconsole.log(pdfMake);\nconsole.log(pdfFonts);\n```\n\nEnsure logs execute as part of `initPdfMake()` before any PDF generation attempts.",
+      "files": [
+        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-build-includes-the-vfs-fonts-bundle-and-the-word-pdf-tool-can-recover-to-a-working-state-without-requiring-a-page-reload-if-initialization-still-fails-at-runtime-provide-a-single-retry-path-clearing-any-cached-initialization-state-before-surfacing-the-final-error-via-the-existing-word-pdf-error-flow",
+      "featureTitle": "Ensure the build includes the `vfs_fonts` bundle and the Word→PDF tool can recover to a working state without requiring a page reload; if initialization still fails at runtime, provide a single retry path (clearing any cached initialization state) before surfacing the final error via the existing Word→PDF error flow.",
+      "files": [
+        "frontend/src/components/tools/processors/conversion/wordToPdfLibraries.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
