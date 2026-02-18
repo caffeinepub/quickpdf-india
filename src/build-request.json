@@ -1,79 +1,48 @@
 {
   "kind": "build_request",
-  "title": "Fix Image Resize mode buttons styling and mobile responsiveness",
+  "title": "Change Target Size mode tab background color (Image Resize)",
   "projectName": "Resize Image Tool",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Fix the 'By Pixels', 'By Percentage', and 'Target Size' mode controls in the Image Resize options so they do not overflow on mobile and remain usable on all screen sizes.",
+      "text": "Update the Image Resize mode tabs so that the \"Target Size\" tab uses a different background color styling than the \"By Pixels\" and \"By Percentage\" tabs (especially for the active state), while keeping the tab labels as \"By Pixels\", \"By Percentage\", and \"Target Size\".",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-9"
+          "msg-3"
         ],
         "quotes": [
-          "By Pixels\nBy Percentage\nTarget Size button fix it background color & size im mobile size its size overflow create buttons responsible"
+          "By Pixels\nBy Percentage\nTarget Size button background color change it"
         ]
       },
       "acceptanceCriteria": [
-        "On narrow/mobile viewports, the mode selector (By Pixels / By Percentage / Target Size) does not cause horizontal page overflow.",
-        "All three mode buttons remain visible and tappable on mobile (no clipping, overlap, or off-screen rendering).",
-        "The mode selector layout adapts responsively (e.g., wraps to multiple lines or allows safe horizontal scrolling) without breaking desktop layout.",
-        "Active/inactive tab background and text colors are visually correct and consistent with the app theme (no unreadable text or missing background)."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Update the Image Resize options form layout to prevent input/control overflow on mobile for all modes, including the Target Size input + unit selector row.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-9"
-        ],
-        "quotes": [
-          "Target Size button fix it background color & size im mobile size its size overflow"
-        ]
-      },
-      "acceptanceCriteria": [
-        "In 'Target Size' mode on mobile, the numeric input and unit dropdown do not overflow their container and remain fully visible.",
-        "In 'By Pixels' mode on mobile, width/height inputs are readable and do not overflow; the layout stacks or compresses appropriately.",
-        "No horizontal scrolling is introduced by any controls within the Image Resize options card at common mobile widths (e.g., ~320px)."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Apply consistent responsive spacing/typography improvements for the Image Resize page options section so the UI/UX looks polished across mobile, tablet, and desktop without changing tool behavior.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4",
-          "msg-9"
-        ],
-        "quotes": [
-          "Fix ui ux & responsive design for all devices",
-          "create buttons responsible"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The Resize Image page options area has comfortable padding and spacing on mobile and does not look cramped or oversized compared to tablet/desktop.",
-        "No functional changes to the resize logic occur; only presentation/layout/styling is adjusted.",
-        "All user-facing labels remain in English and unchanged in meaning."
+        "In the Image Resize options UI, the tab labeled \"Target Size\" has a visibly different background color style than the other two tabs (at minimum when selected/active).",
+        "The tab labels remain in English exactly as: \"By Pixels\", \"By Percentage\", and \"Target Size\".",
+        "Only the styling of the tabs is changed; resize behavior and validation logic remain unchanged."
       ]
     }
   ],
   "constraints": [
-    "Do not edit files under frontend/src/components/ui (shadcn/ui components); fix responsiveness by adjusting usage/classes in feature components (e.g., ImageResizeOptions) and/or other non-immutable styling locations.",
-    "Do not modify any immutable paths listed in SYSTEM_CONTEXT.frontend.immutablePaths.",
-    "Keep backend unchanged; this request is UI/UX and responsiveness only."
+    "Do not modify any files under frontend/src/components/ui (Shadcn UI components must be composed, not edited).",
+    "Do not modify frontend immutable paths listed in SYSTEM_CONTEXT."
   ],
   "nonGoals": [
-    "Implementing new resize modes or changing the image resizing algorithm.",
-    "Adding new backend endpoints or changing Motoko canister state.",
-    "Introducing real-time features or external integrations."
+    "Do not change image resizing algorithms, validation rules, or default values.",
+    "Do not add new resize modes or remove existing modes."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

@@ -140,7 +140,7 @@ export function ImageResizeOptions({
           </TabsTrigger>
           <TabsTrigger 
             value="target-size" 
-            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
           >
             Target Size
           </TabsTrigger>

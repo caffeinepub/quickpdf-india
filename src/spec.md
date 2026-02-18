@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the Image Resize mode selector and options layout so it remains visually correct and fully usable on mobile without changing resize behavior.
+**Goal:** Make the “Target Size” tab in Image Resize mode visually distinct via background color styling, especially when active, without changing resize functionality.
 
 **Planned changes:**
-- Update the "By Pixels / By Percentage / Target Size" mode controls styling so the buttons are responsive (no overflow), remain visible/tappable on narrow screens, and have correct active/inactive background + text colors consistent with the theme.
-- Adjust the Image Resize options form layout for all modes to prevent input/control overflow on mobile (including the Target Size input + unit selector row), using responsive stacking/sizing as needed.
-- Apply small, consistent spacing/typography refinements to the Resize Image options section for a more polished look across mobile/tablet/desktop, without altering any tool logic.
+- Update the Image Resize mode tab styling so the “Target Size” tab uses a different background color than “By Pixels” and “By Percentage” (at minimum for the active/selected state).
+- Keep tab labels exactly: “By Pixels”, “By Percentage”, and “Target Size”.
+- Ensure only UI styling changes are made; resize behavior, validation, and defaults remain unchanged.
 
-**User-visible outcome:** On phones and narrow screens, the Resize Image mode buttons and all related inputs fit cleanly within the page, remain readable and tappable, and no longer cause horizontal overflow.
+**User-visible outcome:** In the Image Resize options, selecting “Target Size” shows a clearly different tab background color style compared to the other two modes, while the resize features work exactly as before.

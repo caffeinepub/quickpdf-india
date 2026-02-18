@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-fix-the-by-pixels-by-percentage-and-target-size-mode-controls-in-the-image-resize-options-so-they-do-not-overflow-on-mobile-and-remain-usable-on-all-screen-sizes",
-      "featureTitle": "Fix the 'By Pixels', 'By Percentage', and 'Target Size' mode controls in the Image Resize options so they do not overflow on mobile and remain usable on all screen sizes.",
+      "featureId": "feature-update-the-image-resize-mode-tabs-so-that-the-target-size-tab-uses-a-different-background-color-styling-than-the-by-pixels-and-by-percentage-tabs-especially-for-the-active-state-while-keeping-the-tab-labels-as-by-pixels-by-percentage-and-target-size",
+      "featureTitle": "Update the Image Resize mode tabs so that the \"Target Size\" tab uses a different background color styling than the \"By Pixels\" and \"By Percentage\" tabs (especially for the active state), while keeping the tab labels as \"By Pixels\", \"By Percentage\", and \"Target Size\".",
       "files": [
         "frontend/src/components/tools/image/ImageResizeOptions.tsx"
       ],
@@ -18,46 +18,6 @@
       ],
       "testIds": [
         "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-image-resize-options-form-layout-to-prevent-input-control-overflow-on-mobile-for-all-modes-including-the-target-size-input-unit-selector-row",
-      "featureTitle": "Update the Image Resize options form layout to prevent input/control overflow on mobile for all modes, including the Target Size input + unit selector row.",
-      "files": [
-        "frontend/src/components/tools/image/ImageResizeOptions.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-apply-consistent-responsive-spacing-typography-improvements-for-the-image-resize-page-options-section-so-the-ui-ux-looks-polished-across-mobile-tablet-and-desktop-without-changing-tool-behavior",
-      "featureTitle": "Apply consistent responsive spacing/typography improvements for the Image Resize page options section so the UI/UX looks polished across mobile, tablet, and desktop without changing tool behavior.",
-      "files": [
-        "frontend/src/components/tools/image/ImageResizeOptions.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "http-outcalls@3.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
       ],
       "confidence": "high"
     }

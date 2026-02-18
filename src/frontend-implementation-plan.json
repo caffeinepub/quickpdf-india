@@ -1,54 +1,21 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Resize Image Tool — Fix mode selector styling and mobile responsiveness",
+  "title": "Resize Image Tool — Target Size tab distinct styling",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Make the Resize Options mode selector (By Pixels / By Percentage / Target Size) responsive and prevent mobile overflow while keeping active/inactive styling consistent.",
+      "summary": "Adjust Image Resize mode tab styling so the \"Target Size\" tab uses a distinct background color style (especially when active) while keeping labels and behavior unchanged.",
       "acceptanceCriteria": [
-        "On narrow/mobile viewports, the mode selector (By Pixels / By Percentage / Target Size) does not cause horizontal page overflow.",
-        "All three mode buttons remain visible and tappable on mobile (no clipping, overlap, or off-screen rendering).",
-        "The mode selector layout adapts responsively (e.g., wraps to multiple lines or allows safe horizontal scrolling) without breaking desktop layout.",
-        "Active/inactive tab background and text colors are visually correct and consistent with the app theme (no unreadable text or missing background)."
+        "In the Image Resize options UI, the tab labeled \"Target Size\" has a visibly different background color style than the other two tabs (at minimum when selected/active).",
+        "The tab labels remain in English exactly as: \"By Pixels\", \"By Percentage\", and \"Target Size\".",
+        "Only the styling of the tabs is changed; resize behavior and validation logic remain unchanged."
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/tools/image/ImageResizeOptions.tsx",
           "operation": "modify",
-          "description": "Adjust the TabsList/TabsTrigger class usage to prevent overflow on mobile (e.g., replace rigid grid layout with a wrapping flex layout or safe horizontal scrolling) and explicitly set responsive padding/typography plus theme-consistent active/inactive colors via utility classes. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Update Resize Options form layouts across modes to avoid input/control overflow on mobile, including the Target Size input + unit selector row.",
-      "acceptanceCriteria": [
-        "In 'Target Size' mode on mobile, the numeric input and unit dropdown do not overflow their container and remain fully visible.",
-        "In 'By Pixels' mode on mobile, width/height inputs are readable and do not overflow; the layout stacks or compresses appropriately.",
-        "No horizontal scrolling is introduced by any controls within the Image Resize options card at common mobile widths (e.g., ~320px)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/tools/image/ImageResizeOptions.tsx",
-          "operation": "modify",
-          "description": "Refine responsive layout classes for each mode's controls: ensure pixel inputs use mobile-safe widths (e.g., min-w-0) and stacking behavior, and change the Target Size input + unit selector container to stack on small screens (e.g., flex-col on mobile, flex-row on larger) with width-safe SelectTrigger sizing. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Polish responsive spacing and typography in the Resize Options section across devices without changing resize behavior.",
-      "acceptanceCriteria": [
-        "The Resize Image page options area has comfortable padding and spacing on mobile and does not look cramped or oversized compared to tablet/desktop.",
-        "No functional changes to the resize logic occur; only presentation/layout/styling is adjusted.",
-        "All user-facing labels remain in English and unchanged in meaning."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/tools/image/ImageResizeOptions.tsx",
-          "operation": "modify",
-          "description": "Tune responsive spacing/typography for the options card and header row: apply mobile-first padding (e.g., smaller base padding with sm+ increase), ensure the header/quality selector wraps cleanly on narrow screens, and standardize spacing between sections while keeping all existing labels/text unchanged. Verify the component's usage instructions before implementing."
+          "description": "Update the Tailwind className styling applied to the TabsTrigger for value=\"target-size\" so its active-state background color (and complementary text/border styling if needed for contrast) is different from the \"pixels\" and \"percentage\" triggers; do not change tab labels, mode values, or any validation/processing logic, and do not modify any files under frontend/src/components/ui."
         }
       ]
     }
