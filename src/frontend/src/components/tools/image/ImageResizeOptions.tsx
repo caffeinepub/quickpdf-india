@@ -104,149 +104,190 @@ export function ImageResizeOptions({
   };
 
   return (
-    <div className="space-y-4 sm:space-y-6 rounded-lg border border-border bg-card p-4 sm:p-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="text-base sm:text-lg font-semibold">Resize Options</h3>
+    <div className="space-y-5 rounded-lg border border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-950/20 p-5 sm:p-6 shadow-sm">
+      <div className="space-y-3">
+        <h3 className="text-base sm:text-lg font-semibold text-foreground">Resize Options</h3>
         
-        {/* Quality Selector */}
-        <div className="flex items-center gap-2">
-          <Label htmlFor="quality" className="text-sm text-muted-foreground whitespace-nowrap">Quality:</Label>
-          <Select value={quality} onValueChange={(v) => setQuality(v as any)} disabled={disabled}>
-            <SelectTrigger id="quality" className="w-[110px] h-9">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="low">Low</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="high">High</SelectItem>
-            </SelectContent>
-          </Select>
+        {/* Quality Selector - Button Group */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium text-foreground">Image Quality</Label>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <button
+              type="button"
+              onClick={() => setQuality('low')}
+              disabled={disabled}
+              className={`
+                px-3 py-2.5 rounded-md text-sm font-medium transition-all
+                ${quality === 'low' 
+                  ? 'bg-green-600 text-white shadow-md ring-2 ring-green-600 ring-offset-2 dark:ring-offset-background' 
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }
+                disabled:opacity-50 disabled:cursor-not-allowed
+              `}
+            >
+              Low
+            </button>
+            <button
+              type="button"
+              onClick={() => setQuality('medium')}
+              disabled={disabled}
+              className={`
+                px-3 py-2.5 rounded-md text-sm font-medium transition-all
+                ${quality === 'medium' 
+                  ? 'bg-green-600 text-white shadow-md ring-2 ring-green-600 ring-offset-2 dark:ring-offset-background' 
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }
+                disabled:opacity-50 disabled:cursor-not-allowed
+              `}
+            >
+              Medium
+            </button>
+            <button
+              type="button"
+              onClick={() => setQuality('high')}
+              disabled={disabled}
+              className={`
+                px-3 py-2.5 rounded-md text-sm font-medium transition-all
+                ${quality === 'high' 
+                  ? 'bg-green-600 text-white shadow-md ring-2 ring-green-600 ring-offset-2 dark:ring-offset-background' 
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
+                }
+                disabled:opacity-50 disabled:cursor-not-allowed
+              `}
+            >
+              High
+            </button>
+          </div>
         </div>
       </div>
 
-      <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
-        <TabsList className="grid w-full grid-cols-3 h-auto">
-          <TabsTrigger 
-            value="pixels" 
-            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
-          >
-            By Pixels
-          </TabsTrigger>
-          <TabsTrigger 
-            value="percentage" 
-            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
-          >
-            By Percentage
-          </TabsTrigger>
-          <TabsTrigger 
-            value="target-size" 
-            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
-          >
-            Target Size
-          </TabsTrigger>
-        </TabsList>
+      {/* Resize Mode Tabs */}
+      <div className="space-y-4">
+        <Label className="text-sm font-medium text-foreground">Resize Method</Label>
+        <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
+          <TabsList className="grid w-full grid-cols-3 h-auto bg-white dark:bg-gray-800 p-1">
+            <TabsTrigger 
+              value="pixels" 
+              className="text-xs sm:text-sm px-2 py-2.5 data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-sm"
+            >
+              By Pixels
+            </TabsTrigger>
+            <TabsTrigger 
+              value="percentage" 
+              className="text-xs sm:text-sm px-2 py-2.5 data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-sm"
+            >
+              By Percentage
+            </TabsTrigger>
+            <TabsTrigger 
+              value="target-size" 
+              className="text-xs sm:text-sm px-2 py-2.5 data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-sm"
+            >
+              Target Size
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="pixels" className="space-y-4 mt-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="width" className="text-sm">Width (px)</Label>
-              <Input
-                id="width"
-                type="number"
-                value={width}
-                onChange={(e) => setWidth(e.target.value)}
-                min="1"
-                placeholder="800"
+          <TabsContent value="pixels" className="space-y-4 mt-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="width" className="text-sm font-medium">Width (px)</Label>
+                <Input
+                  id="width"
+                  type="number"
+                  value={width}
+                  onChange={(e) => setWidth(e.target.value)}
+                  min="1"
+                  placeholder="800"
+                  disabled={disabled}
+                  className="min-w-0 bg-white dark:bg-gray-800"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="height" className="text-sm font-medium">Height (px)</Label>
+                <Input
+                  id="height"
+                  type="number"
+                  value={height}
+                  onChange={(e) => setHeight(e.target.value)}
+                  min="1"
+                  placeholder="600"
+                  disabled={disabled || (maintainAspectRatio && !!width)}
+                  className="min-w-0 bg-white dark:bg-gray-800"
+                />
+              </div>
+            </div>
+            <div className="flex items-center space-x-2 pt-1">
+              <Checkbox
+                id="aspect-ratio"
+                checked={maintainAspectRatio}
+                onCheckedChange={(checked) => setMaintainAspectRatio(checked as boolean)}
                 disabled={disabled}
-                className="min-w-0"
               />
+              <Label htmlFor="aspect-ratio" className="cursor-pointer text-sm font-normal">
+                Maintain aspect ratio
+              </Label>
             </div>
+            {maintainAspectRatio && (
+              <p className="text-xs text-muted-foreground bg-white/60 dark:bg-gray-800/60 rounded px-3 py-2">
+                Height will be calculated automatically based on width
+              </p>
+            )}
+          </TabsContent>
+
+          <TabsContent value="percentage" className="space-y-4 mt-5">
             <div className="space-y-2">
-              <Label htmlFor="height" className="text-sm">Height (px)</Label>
+              <Label htmlFor="percentage" className="text-sm font-medium">Scale Percentage</Label>
               <Input
-                id="height"
+                id="percentage"
                 type="number"
-                value={height}
-                onChange={(e) => setHeight(e.target.value)}
+                value={percentage}
+                onChange={(e) => setPercentage(e.target.value)}
                 min="1"
-                placeholder="600"
-                disabled={disabled || (maintainAspectRatio && !!width)}
-                className="min-w-0"
-              />
-            </div>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="aspect-ratio"
-              checked={maintainAspectRatio}
-              onCheckedChange={(checked) => setMaintainAspectRatio(checked as boolean)}
-              disabled={disabled}
-            />
-            <Label htmlFor="aspect-ratio" className="cursor-pointer text-sm">
-              Maintain aspect ratio
-            </Label>
-          </div>
-          {maintainAspectRatio && (
-            <p className="text-xs text-muted-foreground">
-              Height will be calculated automatically based on width
-            </p>
-          )}
-        </TabsContent>
-
-        <TabsContent value="percentage" className="space-y-4 mt-4">
-          <div className="space-y-2">
-            <Label htmlFor="percentage" className="text-sm">Scale Percentage</Label>
-            <Input
-              id="percentage"
-              type="number"
-              value={percentage}
-              onChange={(e) => setPercentage(e.target.value)}
-              min="1"
-              max="200"
-              placeholder="50"
-              disabled={disabled}
-              className="min-w-0"
-            />
-            <p className="text-xs text-muted-foreground">
-              Common values: 10% (tiny), 25% (small), 50% (half), 75% (three-quarters), 100% (original)
-            </p>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="target-size" className="space-y-4 mt-4">
-          <div className="space-y-2">
-            <Label htmlFor="target-size" className="text-sm">Target File Size</Label>
-            <div className="flex flex-col xs:flex-row gap-2">
-              <Input
-                id="target-size"
-                type="number"
-                value={targetSize}
-                onChange={(e) => setTargetSize(e.target.value)}
-                min="1"
+                max="200"
                 placeholder="50"
                 disabled={disabled}
-                className="flex-1 min-w-0"
+                className="min-w-0 bg-white dark:bg-gray-800"
               />
-              <Select value={targetUnit} onValueChange={(v) => setTargetUnit(v as any)} disabled={disabled}>
-                <SelectTrigger className="w-full xs:w-[90px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="KB">KB</SelectItem>
-                  <SelectItem value="MB">MB</SelectItem>
-                </SelectContent>
-              </Select>
+              <p className="text-xs text-muted-foreground bg-white/60 dark:bg-gray-800/60 rounded px-3 py-2">
+                Common values: 10% (tiny), 25% (small), 50% (half), 75% (three-quarters), 100% (original)
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Image will be compressed to approximately this size (±5% tolerance)
-            </p>
-          </div>
-        </TabsContent>
-      </Tabs>
+          </TabsContent>
+
+          <TabsContent value="target-size" className="space-y-4 mt-5">
+            <div className="space-y-2">
+              <Label htmlFor="target-size" className="text-sm font-medium">Target File Size</Label>
+              <div className="flex flex-col xs:flex-row gap-2">
+                <Input
+                  id="target-size"
+                  type="number"
+                  value={targetSize}
+                  onChange={(e) => setTargetSize(e.target.value)}
+                  min="1"
+                  placeholder="50"
+                  disabled={disabled}
+                  className="flex-1 min-w-0 bg-white dark:bg-gray-800"
+                />
+                <Select value={targetUnit} onValueChange={(v) => setTargetUnit(v as any)} disabled={disabled}>
+                  <SelectTrigger className="w-full xs:w-[90px] bg-white dark:bg-gray-800">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="KB">KB</SelectItem>
+                    <SelectItem value="MB">MB</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <p className="text-xs text-muted-foreground bg-white/60 dark:bg-gray-800/60 rounded px-3 py-2">
+                Image will be compressed to approximately this size (±5% tolerance)
+              </p>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
 
       {validationError && (
-        <div className="rounded-md bg-destructive/10 border border-destructive/30 p-3">
-          <p className="text-sm text-destructive">{validationError}</p>
+        <div className="rounded-md bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 p-3">
+          <p className="text-sm text-red-700 dark:text-red-400 font-medium">{validationError}</p>
         </div>
       )}
 
@@ -256,7 +297,7 @@ export function ImageResizeOptions({
         loading={isLoading}
         icon={ImageIcon}
         size="lg"
-        className="w-full"
+        className="w-full mt-2"
       >
         {isLoading ? 'Processing...' : 'Resize Image'}
       </ToolPrimaryActionButton>

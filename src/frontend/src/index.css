@@ -119,6 +119,15 @@
   .prose blockquote {
     @apply border-l-4 border-primary pl-4 italic my-4;
   }
+
+  /* Watermark slider styling with green progress bar */
+  .watermark-slider [role="slider"] {
+    @apply bg-primary border-primary;
+  }
+  
+  .watermark-slider [data-orientation="horizontal"] > span:first-child {
+    @apply bg-primary;
+  }
 }
 
 /* Tool section utilities */

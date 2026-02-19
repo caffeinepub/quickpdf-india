@@ -116,6 +116,7 @@ export function WatermarkOptions({ value, onChange }: WatermarkOptionsProps) {
             step={5}
             value={[value.opacity * 100]}
             onValueChange={handleOpacityChange}
+            className="watermark-slider"
           />
         </div>
 
@@ -132,6 +133,7 @@ export function WatermarkOptions({ value, onChange }: WatermarkOptionsProps) {
             step={4}
             value={[value.fontSize]}
             onValueChange={handleFontSizeChange}
+            className="watermark-slider"
           />
         </div>
 
@@ -148,6 +150,7 @@ export function WatermarkOptions({ value, onChange }: WatermarkOptionsProps) {
             step={15}
             value={[value.rotation]}
             onValueChange={handleRotationChange}
+            className="watermark-slider"
           />
         </div>
       </CardContent>

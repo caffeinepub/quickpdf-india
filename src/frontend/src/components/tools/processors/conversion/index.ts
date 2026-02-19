@@ -1,7 +1,9 @@
-/**
- * Barrel export for conversion processors
- */
-
 export { pdfToWordProcessor } from './pdfToWordProcessor';
 export { wordToPdfProcessor } from './wordToPdfProcessor';
-export type { WordToPdfProcessorOptions, WordToPdfProcessorResult } from './wordToPdfProcessor';
+export { pdfToJpgProcessor } from './pdfToJpgProcessor';
+export { jpgToJpegProcessor } from './jpgToJpegProcessor';
+export { jpegToJpgProcessor } from './jpegToJpgProcessor';
+export { excelToPdfProcessor } from './excelToPdfProcessor';
+export { pdfToExcelProcessor } from './pdfToExcelProcessor';
+export { powerpointToPdfProcessor } from './powerpointToPdfProcessor';
+export { pdfToPowerpointProcessor } from './pdfToPowerpointProcessor';

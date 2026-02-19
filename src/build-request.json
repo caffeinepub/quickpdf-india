@@ -1,95 +1,68 @@
 {
   "kind": "build_request",
-  "title": "Fix Word to PDF conversion feature",
-  "priority": "high",
+  "title": "Update watermark slider colors to green",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Rebuild the Word to PDF conversion logic to properly convert .doc and .docx files to PDF format with maintained formatting",
-      "target": "both",
+      "text": "Change the opacity slider color to green in the watermark options component",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-user-final"
         ],
         "quotes": [
-          "Rebuild conversion logic",
-          "Support .doc and .docx files",
-          "Maintain formatting"
+          "opacity slider clor green"
         ]
       },
       "acceptanceCriteria": [
-        "Both .doc and .docx file formats are successfully converted to PDF",
-        "Document formatting (fonts, styles, layout) is preserved in the output PDF",
-        "Conversion completes without errors for valid Word documents"
+        "The opacity slider in the watermark tool displays with green color styling",
+        "The green styling is consistent with the site's green theme"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Ensure the converted PDF file downloads properly to the user's device after successful conversion",
+      "text": "Change the font size slider color to green in the watermark options component",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-user-final"
         ],
         "quotes": [
-          "PDF not downloading",
-          "Ensure proper file download"
+          "font size slider colour green"
         ]
       },
       "acceptanceCriteria": [
-        "Download initiates automatically after successful conversion",
-        "Downloaded file is a valid PDF that can be opened",
-        "File downloads with appropriate filename (original name with .pdf extension)"
+        "The font size slider in the watermark tool displays with green color styling",
+        "The green styling matches the opacity slider styling"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Add comprehensive error handling for conversion failures with user-friendly error messages",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "Conversion failed error",
-          "Add error handling"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Clear error messages displayed when conversion fails",
-        "Different error messages for different failure scenarios (invalid file, conversion error, network error)",
-        "Errors are logged for debugging purposes"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Add a retry button that allows users to attempt conversion again after an error without re-uploading the file",
+      "text": "Change the rotation slider color to green in the watermark options component",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-user-final"
         ],
         "quotes": [
-          "retry button"
+          "rotation slider color green"
         ]
       },
       "acceptanceCriteria": [
-        "Retry button appears in the error state",
-        "Clicking retry re-attempts conversion with the same file",
-        "Progress indicator shows during retry attempt"
+        "The rotation slider in the watermark tool displays with green color styling",
+        "The green styling is consistent with the other watermark sliders"
       ]
     }
   ],
   "constraints": [
-    "Do not modify any other tool functionality beyond Word to PDF",
-    "Maintain existing file size limit of 10MB for Word documents",
-    "Keep existing validation for .doc and .docx file types"
+    "Do not modify sliders or styling in other tool components outside the watermark tool",
+    "Maintain existing watermark tool functionality while updating only the visual styling of the three specified sliders"
   ],
   "nonGoals": [
-    "Modifying PDF to Word conversion feature",
-    "Changing any other document conversion tools",
-    "Altering file upload UI for other tools",
-    "Modifying navigation or layout components"
+    "Changing colors or styling of other tools",
+    "Modifying the watermark preview component",
+    "Altering the watermark processing logic"
   ],
   "imageRequirements": {
     "required": [],

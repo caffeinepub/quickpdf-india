@@ -1,51 +1,44 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Document conversion tool with multiple format support including Word to PDF conversion",
-  "architectural_notes": [
-    "Word to PDF conversion supports both .doc and .docx formats",
-    "PDF conversion maintains document formatting",
-    "Conversion includes error handling with retry functionality",
-    "File download mechanism for converted PDFs"
-  ],
+  "summary": "New project",
+  "architectural_notes": [],
   "known_issues": [],
-  "isFixRequest": true,
-  "existing_features": [
+  "isFixRequest": false,
+  "existing_features": [],
+  "new_feature_requests": [
     {
-      "id": "feature-rebuild-the-word-to-pdf-conversion-logic-to-properly-convert-doc-and-docx-files-to-pdf-format-with-maintained-formatting",
-      "title": "Rebuild the Word to PDF conversion logic to properly convert .doc and .docx files to PDF format with maintained formatting",
+      "id": "AR-1",
+      "summary": "Change watermark tool sliders (opacity, font size, rotation) to green color",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Change the opacity slider color to green in the watermark options component",
       "reqIds": [
         "REQ-1"
       ],
-      "version": 1
+      "status": "pending"
     },
     {
-      "id": "feature-ensure-the-converted-pdf-file-downloads-properly-to-the-user-s-device-after-successful-conversion",
-      "title": "Ensure the converted PDF file downloads properly to the user's device after successful conversion",
+      "id": "AR-3",
+      "summary": "Change the font size slider color to green in the watermark options component",
       "reqIds": [
         "REQ-2"
       ],
-      "version": 1
+      "status": "pending"
     },
     {
-      "id": "feature-add-comprehensive-error-handling-for-conversion-failures-with-user-friendly-error-messages",
-      "title": "Add comprehensive error handling for conversion failures with user-friendly error messages",
+      "id": "AR-4",
+      "summary": "Change the rotation slider color to green in the watermark options component",
       "reqIds": [
         "REQ-3"
       ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-retry-button-that-allows-users-to-attempt-conversion-again-after-an-error-without-re-uploading-the-file",
-      "title": "Add a retry button that allows users to attempt conversion again after an error without re-uploading the file",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
+      "status": "pending"
     }
   ],
-  "new_feature_requests": [],
-  "projectName": "Fix Word to PDF conversion feature",
+  "projectName": "Update watermark slider colors to green",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }
