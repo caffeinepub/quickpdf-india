@@ -12,6 +12,10 @@ export interface WordToPdfProcessorResult {
   blob: Blob;
 }
 
+/**
+ * Word to PDF processor with comprehensive validation and error handling
+ * Supports both .doc and .docx formats with proper formatting preservation
+ */
 export async function wordToPdfProcessor({
   file,
   actor,
@@ -26,6 +30,12 @@ export async function wordToPdfProcessor({
   const fileName = file.name.toLowerCase();
   if (!fileName.endsWith('.doc') && !fileName.endsWith('.docx')) {
     throw new Error('Only .doc and .docx files are supported. Please select a valid Word document.');
+  }
+
+  // Validate file size (10MB limit)
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+  if (file.size > MAX_SIZE) {
+    throw new Error('File size exceeds 10MB limit. Please use a smaller file.');
   }
 
   // Report initial progress
@@ -49,6 +59,7 @@ export async function wordToPdfProcessor({
   } catch (error: any) {
     // Provide clear error messages
     const errorMessage = error.message || 'Failed to convert Word document to PDF';
+    console.error('Word to PDF processor error:', errorMessage);
     throw new Error(errorMessage);
   }
 }

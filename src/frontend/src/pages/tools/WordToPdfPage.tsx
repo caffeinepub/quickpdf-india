@@ -2,6 +2,7 @@ import { Seo } from '@/components/seo/Seo';
 import { RelatedToolsLinks } from '@/components/seo/RelatedToolsLinks';
 import { ToolFaq } from '@/components/faq/ToolFaq';
 import { AdSlot } from '@/components/ads/AdSlot';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { WordToPdfTool } from './word-to-pdf/WordToPdfTool';
 import { wordToPdfFaq } from './word-to-pdf/wordToPdfFaq';
 
@@ -11,6 +12,8 @@ import { wordToPdfFaq } from './word-to-pdf/wordToPdfFaq';
  * Preserves existing layout, ads, and SEO structure
  */
 export default function WordToPdfPage() {
+  useScrollToTop();
+
   return (
     <>
       <Seo

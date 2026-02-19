@@ -1,24 +1,71 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-18T11:20:04.405Z",
+  "generatedAt": "2026-02-19T08:12:57.209Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
+    "total": 4,
+    "implemented": 4,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Update the Image Resize mode tabs so that the \"Target Size\" tab uses a different background color styling than the \"By Pixels\" and \"By Percentage\" tabs (especially for the active state), while keeping the tab labels as \"By Pixels\", \"By Percentage\", and \"Target Size\".",
+        "summary": "Rebuild the Word to PDF conversion logic to properly convert .doc and .docx files to PDF format with maintained formatting",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/tools/image/ImageResizeOptions.tsx"
+          "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
+          "frontend/src/lib/wordToPdfApi.ts",
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/tools/image/ImageResizeOptions.tsx"
+          "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
+          "frontend/src/lib/wordToPdfApi.ts",
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Ensure the converted PDF file downloads properly to the user's device after successful conversion",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfResultCard.tsx",
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfResultCard.tsx",
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Add comprehensive error handling for conversion failures with user-friendly error messages",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfErrorCard.tsx",
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx",
+          "frontend/src/lib/wordToPdfApi.ts",
+          "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfErrorCard.tsx",
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx",
+          "frontend/src/lib/wordToPdfApi.ts",
+          "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Add a retry button that allows users to attempt conversion again after an error without re-uploading the file",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfErrorCard.tsx",
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfErrorCard.tsx",
+          "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx"
         ]
       }
     ]
@@ -28,7 +75,11 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/tools/image/ImageResizeOptions.tsx",
+    "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
+    "frontend/src/lib/wordToPdfApi.ts",
+    "frontend/src/pages/tools/word-to-pdf/WordToPdfErrorCard.tsx",
+    "frontend/src/pages/tools/word-to-pdf/WordToPdfResultCard.tsx",
+    "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

@@ -128,19 +128,19 @@ export function ImageResizeOptions({
         <TabsList className="grid w-full grid-cols-3 h-auto">
           <TabsTrigger 
             value="pixels" 
-            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
           >
             By Pixels
           </TabsTrigger>
           <TabsTrigger 
             value="percentage" 
-            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
           >
             By Percentage
           </TabsTrigger>
           <TabsTrigger 
             value="target-size" 
-            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
+            className="text-xs sm:text-sm px-2 py-2 data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
           >
             Target Size
           </TabsTrigger>

@@ -6,12 +6,14 @@ import { RelatedToolsLinks } from '@/components/seo/RelatedToolsLinks';
 import { ToolFaq } from '@/components/faq/ToolFaq';
 import { ToolPageShell } from '@/components/tools/ToolPageShell';
 import { useToolJob } from '@/hooks/useToolJob';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { resizePdfProcessor, PageSize } from '@/components/tools/processors/pdf';
 import { normalizeToolError } from '@/components/tools/toolError';
 import { ToolPrimaryActionButton } from '@/components/tools/ToolPrimaryActionButton';
 import { Maximize2 } from 'lucide-react';
 
 export function ResizePdfPage() {
+  useScrollToTop();
   const job = useToolJob();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [targetSize, setTargetSize] = useState<PageSize>('A4');

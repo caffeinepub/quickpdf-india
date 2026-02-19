@@ -1,48 +1,98 @@
 {
   "kind": "build_request",
-  "title": "Change Target Size mode tab background color (Image Resize)",
-  "projectName": "Resize Image Tool",
-  "priority": "normal",
+  "title": "Fix Word to PDF conversion feature",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Update the Image Resize mode tabs so that the \"Target Size\" tab uses a different background color styling than the \"By Pixels\" and \"By Percentage\" tabs (especially for the active state), while keeping the tab labels as \"By Pixels\", \"By Percentage\", and \"Target Size\".",
-      "target": "frontend",
+      "text": "Rebuild the Word to PDF conversion logic to properly convert .doc and .docx files to PDF format with maintained formatting",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-4"
         ],
         "quotes": [
-          "By Pixels\nBy Percentage\nTarget Size button background color change it"
+          "Rebuild conversion logic",
+          "Support .doc and .docx files",
+          "Maintain formatting"
         ]
       },
       "acceptanceCriteria": [
-        "In the Image Resize options UI, the tab labeled \"Target Size\" has a visibly different background color style than the other two tabs (at minimum when selected/active).",
-        "The tab labels remain in English exactly as: \"By Pixels\", \"By Percentage\", and \"Target Size\".",
-        "Only the styling of the tabs is changed; resize behavior and validation logic remain unchanged."
+        "Both .doc and .docx file formats are successfully converted to PDF",
+        "Document formatting (fonts, styles, layout) is preserved in the output PDF",
+        "Conversion completes without errors for valid Word documents"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Ensure the converted PDF file downloads properly to the user's device after successful conversion",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "PDF not downloading",
+          "Ensure proper file download"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Download initiates automatically after successful conversion",
+        "Downloaded file is a valid PDF that can be opened",
+        "File downloads with appropriate filename (original name with .pdf extension)"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add comprehensive error handling for conversion failures with user-friendly error messages",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "Conversion failed error",
+          "Add error handling"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clear error messages displayed when conversion fails",
+        "Different error messages for different failure scenarios (invalid file, conversion error, network error)",
+        "Errors are logged for debugging purposes"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add a retry button that allows users to attempt conversion again after an error without re-uploading the file",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "retry button"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Retry button appears in the error state",
+        "Clicking retry re-attempts conversion with the same file",
+        "Progress indicator shows during retry attempt"
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files under frontend/src/components/ui (Shadcn UI components must be composed, not edited).",
-    "Do not modify frontend immutable paths listed in SYSTEM_CONTEXT."
+    "Do not modify any other tool functionality beyond Word to PDF",
+    "Maintain existing file size limit of 10MB for Word documents",
+    "Keep existing validation for .doc and .docx file types"
   ],
   "nonGoals": [
-    "Do not change image resizing algorithms, validation rules, or default values.",
-    "Do not add new resize modes or remove existing modes."
+    "Modifying PDF to Word conversion feature",
+    "Changing any other document conversion tools",
+    "Altering file upload UI for other tools",
+    "Modifying navigation or layout components"
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

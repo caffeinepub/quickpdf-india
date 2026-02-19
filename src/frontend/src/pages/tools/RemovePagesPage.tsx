@@ -5,6 +5,7 @@ import { RelatedToolsLinks } from '@/components/seo/RelatedToolsLinks';
 import { ToolFaq } from '@/components/faq/ToolFaq';
 import { ToolPageShell } from '@/components/tools/ToolPageShell';
 import { useToolJob } from '@/hooks/useToolJob';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { removePagesProcessor, parsePageRanges } from '@/components/tools/processors/pdf';
 import { getPdfPageCount } from '@/components/tools/processors/pdf/pdfClient';
 import { normalizeToolError } from '@/components/tools/toolError';
@@ -13,6 +14,7 @@ import { ToolPrimaryActionButton } from '@/components/tools/ToolPrimaryActionBut
 import { Scissors } from 'lucide-react';
 
 export default function RemovePagesPage() {
+  useScrollToTop();
   const job = useToolJob();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [pageRanges, setPageRanges] = useState('');

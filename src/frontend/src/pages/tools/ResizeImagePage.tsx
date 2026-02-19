@@ -4,6 +4,7 @@ import { ToolExperience } from '@/components/tools/ToolExperience';
 import { RelatedToolsLinks } from '@/components/seo/RelatedToolsLinks';
 import { ToolFaq } from '@/components/faq/ToolFaq';
 import { useToolJob } from '@/hooks/useToolJob';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { ImageResizeOptions } from '@/components/tools/image/ImageResizeOptions';
 import { resizeImage, ImageResizeOptions as ResizeOptions } from '@/components/tools/processors/imageResizeProcessor';
 import { normalizeToolError } from '@/components/tools/toolError';
@@ -14,17 +15,13 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 
 export default function ResizeImagePage() {
+  useScrollToTop();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [outputPreviewUrl, setOutputPreviewUrl] = useState<string | null>(null);
   const [originalDimensions, setOriginalDimensions] = useState<{ width: number; height: number } | null>(null);
   const [outputDimensions, setOutputDimensions] = useState<{ width: number; height: number; size: number } | null>(null);
   const job = useToolJob();
-
-  // Scroll to top on mount
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
 
   // Create preview URL and get dimensions when file is selected
   useEffect(() => {
@@ -216,147 +213,129 @@ export default function ResizeImagePage() {
     job.reset();
   };
 
-  const faqs = [
+  const faqItems = [
     {
       question: 'What image formats are supported?',
-      answer: 'We support JPEG, PNG, and WEBP image formats for the best quality and compatibility.',
-    },
-    {
-      question: 'What is the maximum file size?',
-      answer: `The maximum file size is ${MAX_FILE_SIZE_MB}MB. If your image is larger, please compress it first or use a smaller image.`,
-    },
-    {
-      question: 'How do I resize an image to a specific KB size?',
       answer:
-        'Use the "Target Size" option and enter your desired file size in KB or MB. Our tool will automatically compress the image to meet that size with a ±5% tolerance.',
+        'We support JPEG, PNG, and WEBP image formats. You can upload images up to 5MB in size.',
+    },
+    {
+      question: 'How does the target size mode work?',
+      answer:
+        'Target size mode automatically adjusts the image quality to reach your desired file size (in KB or MB). It uses an intelligent compression algorithm to find the optimal balance between quality and file size.',
     },
     {
       question: 'Will resizing affect image quality?',
       answer:
-        'Some quality loss may occur when significantly reducing size. Use the quality selector (Low/Medium/High) to control the balance between file size and quality.',
+        'When resizing by pixels or percentage, quality is preserved as much as possible. Target size mode may reduce quality to achieve the desired file size. You can control the quality level (low, medium, high) for all modes.',
     },
     {
-      question: 'Can I resize multiple images at once?',
-      answer: 'Currently, you can resize one image at a time for the best results.',
-    },
-    {
-      question: 'What does "maintain aspect ratio" mean?',
-      answer: 'When enabled, the image proportions stay the same, preventing distortion. If you enter a width, the height is calculated automatically to keep the original shape.',
+      question: 'Is my image secure?',
+      answer:
+        'Yes! All processing happens entirely in your browser. Your image never leaves your device, ensuring complete privacy and security.',
     },
   ];
-
-  const isProcessing = job.jobStatus === 'processing' || job.jobStatus === 'uploading';
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-  };
 
   return (
     <>
       <Seo
-        title="Resize Image Online"
-        description="Resize and compress images online for free. Change dimensions by pixels, percentage, or target file size. Perfect for web and mobile."
+        title="Resize Image Online - Change Image Dimensions"
+        description="Resize images by pixels, percentage, or target file size. Fast, secure, and free. Supports JPEG, PNG, and WEBP formats."
       />
-      <div className="container py-12">
-        <div className="mx-auto max-w-4xl space-y-12">
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold">Resize Image Online</h1>
-            <p className="text-lg text-muted-foreground">
-              Resize images by pixels, percentage, or compress to a specific file size. Perfect for
-              profile pictures, website images, and meeting file size requirements.
-            </p>
-          </div>
 
-          <ToolExperience
-            onFilesSelected={handleFilesSelected}
-            acceptedFileTypes={ALLOWED_EXTENSIONS.join(',')}
-            maxFiles={1}
-            fileType="image"
-            maxFileSizeBytes={MAX_FILE_SIZE_BYTES}
-            jobStatus={job.jobStatus}
-            progress={job.progress}
-            resultFile={job.resultFile}
-            error={job.error}
-            selectedFiles={selectedFiles}
-            onRemoveFile={handleRemoveFile}
-            onStartOver={handleStartOver}
-          >
-            {selectedFiles.length > 0 && job.jobStatus === 'idle' && (
-              <div className="space-y-6">
-                {/* Original Image Preview */}
-                {previewUrl && originalDimensions && (
-                  <div className="rounded-lg border border-border bg-muted/30 p-4">
-                    <h3 className="mb-3 text-sm font-semibold">Original Image</h3>
-                    <div className="flex justify-center">
-                      <img
-                        src={previewUrl}
-                        alt="Original image preview"
-                        className="max-h-64 rounded-lg object-contain"
-                      />
-                    </div>
-                    <div className="mt-3 text-center space-y-1">
-                      <p className="text-sm font-medium">
-                        {originalDimensions.width} × {originalDimensions.height} px
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {selectedFiles[0].name} • {formatFileSize(selectedFiles[0].size)}
-                      </p>
-                    </div>
-                  </div>
-                )}
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <header className="mb-8 text-center">
+          <h1 className="mb-4 text-4xl font-bold">Resize Image Online</h1>
+          <p className="text-lg text-muted-foreground">
+            Resize your images by pixels, percentage, or target file size. All processing happens
+            securely in your browser - no uploads required.
+          </p>
+        </header>
 
-                {/* Resize Options */}
-                <ImageResizeOptions
-                  onProcess={handleProcess}
-                  disabled={isProcessing}
-                  isLoading={isProcessing}
-                  originalWidth={originalDimensions?.width}
-                  originalHeight={originalDimensions?.height}
-                />
-              </div>
-            )}
-
-            {/* Output Preview - shown after processing */}
-            {job.jobStatus === 'done' && outputPreviewUrl && outputDimensions && (
-              <div className="rounded-lg border border-primary/30 bg-primary/5 p-4">
-                <h3 className="mb-3 text-sm font-semibold text-primary">Resized Image</h3>
-                <div className="flex justify-center">
+        <ToolExperience
+          onFilesSelected={handleFilesSelected}
+          acceptedFileTypes={ALLOWED_EXTENSIONS.join(',')}
+          maxFiles={1}
+          jobStatus={job.jobStatus}
+          progress={job.progress}
+          resultFile={job.resultFile}
+          error={job.error}
+          selectedFiles={selectedFiles}
+          onRemoveFile={handleRemoveFile}
+          onStartOver={handleStartOver}
+        >
+          {selectedFiles.length > 0 && previewUrl && (
+            <div className="space-y-6">
+              {/* Original Image Preview */}
+              <div className="rounded-lg border border-border bg-card p-4">
+                <h3 className="mb-3 text-sm font-medium">Original Image</h3>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                   <img
-                    src={outputPreviewUrl}
-                    alt="Resized image preview"
-                    className="max-h-64 rounded-lg object-contain"
+                    src={previewUrl}
+                    alt="Original"
+                    className="max-h-48 rounded border border-border object-contain"
                   />
-                </div>
-                <div className="mt-3 text-center space-y-1">
-                  <p className="text-sm font-medium">
-                    {outputDimensions.width} × {outputDimensions.height} px
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {formatFileSize(outputDimensions.size)}
-                  </p>
                   {originalDimensions && (
-                    <p className="text-xs text-primary font-medium">
-                      Size reduced by {(((selectedFiles[0].size - outputDimensions.size) / selectedFiles[0].size) * 100).toFixed(1)}%
-                    </p>
+                    <div className="text-sm text-muted-foreground">
+                      <p>
+                        <strong>Dimensions:</strong> {originalDimensions.width} × {originalDimensions.height}px
+                      </p>
+                      <p>
+                        <strong>Size:</strong> {(selectedFiles[0].size / 1024).toFixed(2)} KB
+                      </p>
+                    </div>
                   )}
                 </div>
               </div>
-            )}
-          </ToolExperience>
 
-          <div className="grid gap-8 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <ToolFaq faqs={faqs} />
-            </div>
-            <div>
-              <RelatedToolsLinks
-                currentToolId="resize-image"
-                relatedToolIds={['image-to-pdf', 'compress-pdf']}
+              {/* Resize Options */}
+              <ImageResizeOptions
+                onProcess={handleProcess}
+                originalWidth={originalDimensions?.width}
+                originalHeight={originalDimensions?.height}
               />
+
+              {/* Output Preview (after processing) */}
+              {outputPreviewUrl && outputDimensions && (
+                <div className="rounded-lg border border-border bg-card p-4">
+                  <h3 className="mb-3 text-sm font-medium text-green-600">Resized Image</h3>
+                  <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                    <img
+                      src={outputPreviewUrl}
+                      alt="Resized"
+                      className="max-h-48 rounded border border-border object-contain"
+                    />
+                    <div className="text-sm text-muted-foreground">
+                      <p>
+                        <strong>Dimensions:</strong> {outputDimensions.width} × {outputDimensions.height}px
+                      </p>
+                      <p>
+                        <strong>Size:</strong> {(outputDimensions.size / 1024).toFixed(2)} KB
+                      </p>
+                      {selectedFiles[0] && (
+                        <p className="text-green-600">
+                          <strong>Reduction:</strong>{' '}
+                          {(((selectedFiles[0].size - outputDimensions.size) / selectedFiles[0].size) * 100).toFixed(1)}%
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
+          )}
+        </ToolExperience>
+
+        <div className="mt-12 grid gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <ToolFaq faqs={faqItems} />
           </div>
+          <aside>
+            <RelatedToolsLinks
+              currentToolId="resize-image"
+              relatedToolIds={['image-to-pdf', 'compress-pdf']}
+            />
+          </aside>
         </div>
       </div>
     </>

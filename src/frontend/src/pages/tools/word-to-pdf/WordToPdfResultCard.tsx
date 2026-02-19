@@ -12,7 +12,7 @@ interface WordToPdfResultCardProps {
 
 /**
  * Success result card with download button and process another option
- * Shows explicit success message with green checkmark
+ * Shows explicit success message with green checkmark and proper file download
  */
 export function WordToPdfResultCard({
   fileName,
@@ -20,7 +20,12 @@ export function WordToPdfResultCard({
   onProcessAnother,
 }: WordToPdfResultCardProps) {
   const handleDownload = () => {
-    downloadBlob(blob, fileName);
+    try {
+      downloadBlob(blob, fileName);
+    } catch (error) {
+      console.error('Download error:', error);
+      alert('Failed to download the file. Please try again.');
+    }
   };
 
   return (

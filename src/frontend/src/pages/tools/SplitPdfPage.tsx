@@ -3,9 +3,11 @@ import { ToolExperience } from '@/components/tools/ToolExperience';
 import { RelatedToolsLinks } from '@/components/seo/RelatedToolsLinks';
 import { ToolFaq } from '@/components/faq/ToolFaq';
 import { useToolJob } from '@/hooks/useToolJob';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { splitPdfProcessor } from '@/components/tools/processors/pdf';
 
 export function SplitPdfPage() {
+  useScrollToTop();
   const { jobStatus, progress, resultFile, error, startJob } = useToolJob();
 
   const handleFilesSelected = async (files: File[]) => {

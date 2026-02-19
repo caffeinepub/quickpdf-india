@@ -1,21 +1,104 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Resize Image Tool — Target Size tab distinct styling",
+  "title": "Fix Word to PDF conversion feature",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Adjust Image Resize mode tab styling so the \"Target Size\" tab uses a distinct background color style (especially when active) while keeping labels and behavior unchanged.",
+      "summary": "Rebuild the Word to PDF conversion logic to properly convert .doc and .docx files to PDF format with maintained formatting",
       "acceptanceCriteria": [
-        "In the Image Resize options UI, the tab labeled \"Target Size\" has a visibly different background color style than the other two tabs (at minimum when selected/active).",
-        "The tab labels remain in English exactly as: \"By Pixels\", \"By Percentage\", and \"Target Size\".",
-        "Only the styling of the tabs is changed; resize behavior and validation logic remain unchanged."
+        "Both .doc and .docx file formats are successfully converted to PDF",
+        "Document formatting (fonts, styles, layout) is preserved in the output PDF",
+        "Conversion completes without errors for valid Word documents"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/tools/image/ImageResizeOptions.tsx",
+          "path": "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
           "operation": "modify",
-          "description": "Update the Tailwind className styling applied to the TabsTrigger for value=\"target-size\" so its active-state background color (and complementary text/border styling if needed for contrast) is different from the \"pixels\" and \"percentage\" triggers; do not change tab labels, mode values, or any validation/processing logic, and do not modify any files under frontend/src/components/ui."
+          "description": "Update the Word to PDF conversion logic to ensure proper handling of both .doc and .docx formats. Verify the blob-storage component's usage instructions before implementing. Ensure the processor properly validates file types, handles conversion through the backend API, and maintains document formatting during the conversion process."
+        },
+        {
+          "path": "frontend/src/lib/wordToPdfApi.ts",
+          "operation": "modify",
+          "description": "Update the backend API wrapper to properly handle the conversion response. Verify the blob-storage component's usage instructions before implementing. Ensure the function properly receives the converted PDF data from the backend, handles progress tracking during upload and conversion, and returns the result in a format suitable for download."
+        },
+        {
+          "path": "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx",
+          "operation": "modify",
+          "description": "Update the state machine logic to handle the complete conversion flow including proper state transitions from uploading to converting to success. Ensure the component properly captures the converted PDF result and passes it to the result card for download."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Ensure the converted PDF file downloads properly to the user's device after successful conversion",
+      "acceptanceCriteria": [
+        "Download initiates automatically after successful conversion",
+        "Downloaded file is a valid PDF that can be opened",
+        "File downloads with appropriate filename (original name with .pdf extension)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/tools/word-to-pdf/WordToPdfResultCard.tsx",
+          "operation": "modify",
+          "description": "Update the download functionality to properly handle the converted PDF file. Use the download utility from frontend/src/lib/download.ts to trigger the file download with the correct filename (original Word document name with .pdf extension). Ensure the download button correctly retrieves the PDF data and initiates the download."
+        },
+        {
+          "path": "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx",
+          "operation": "modify",
+          "description": "Update the state management to properly store the converted PDF data and original filename in the component state. Pass both the PDF blob and the derived PDF filename to the WordToPdfResultCard component to enable proper download functionality."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Add comprehensive error handling for conversion failures with user-friendly error messages",
+      "acceptanceCriteria": [
+        "Clear error messages displayed when conversion fails",
+        "Different error messages for different failure scenarios (invalid file, conversion error, network error)",
+        "Errors are logged for debugging purposes"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/tools/word-to-pdf/WordToPdfErrorCard.tsx",
+          "operation": "modify",
+          "description": "Enhance the error display component to show specific error messages for different failure scenarios including invalid file types, file size limit violations, conversion errors, network errors, and backend connection failures. Use the error normalization utilities from frontend/src/components/tools/toolError.ts to generate user-friendly messages."
+        },
+        {
+          "path": "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx",
+          "operation": "modify",
+          "description": "Add comprehensive try-catch blocks around the conversion workflow to capture errors at each stage (file validation, upload, conversion). Normalize errors using the toolError utilities and update the error state with detailed error information including error type and user-friendly messages. Add console logging for debugging purposes."
+        },
+        {
+          "path": "frontend/src/lib/wordToPdfApi.ts",
+          "operation": "modify",
+          "description": "Enhance error handling in the API wrapper to catch and normalize errors from the backend conversion process. Distinguish between network errors, backend connection failures, and conversion-specific errors. Throw descriptive errors that can be caught and displayed by the UI layer."
+        },
+        {
+          "path": "frontend/src/components/tools/processors/conversion/wordToPdfProcessor.ts",
+          "operation": "modify",
+          "description": "Add detailed error handling for file validation failures including specific messages for unsupported file types, empty files, and files exceeding the 10MB size limit. Ensure validation errors are thrown with clear messages that identify the specific validation failure."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Add a retry button that allows users to attempt conversion again after an error without re-uploading the file",
+      "acceptanceCriteria": [
+        "Retry button appears in the error state",
+        "Clicking retry re-attempts conversion with the same file",
+        "Progress indicator shows during retry attempt"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/tools/word-to-pdf/WordToPdfErrorCard.tsx",
+          "operation": "modify",
+          "description": "Add a retry button to the error card component that accepts an onRetry callback prop. Style the button to be visually distinct from the existing reset button. Ensure the retry button is clearly labeled and positioned prominently in the error state UI."
+        },
+        {
+          "path": "frontend/src/pages/tools/word-to-pdf/WordToPdfTool.tsx",
+          "operation": "modify",
+          "description": "Implement retry logic that preserves the uploaded file in state when an error occurs. Add a handleRetry function that transitions from the error state back to the converting state and re-attempts the conversion using the stored file. Pass the retry handler to the WordToPdfErrorCard component. Ensure the progress card displays during retry attempts with appropriate status messages."
         }
       ]
     }

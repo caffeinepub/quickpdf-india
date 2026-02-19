@@ -17,7 +17,7 @@ interface ConversionResult {
 
 /**
  * Main Word-to-PDF tool component with modern green/white UI
- * Handles the complete conversion flow: upload → progress → download
+ * Handles the complete conversion flow: upload → progress → download with retry support
  */
 export function WordToPdfTool() {
   const { actor } = useActor();
@@ -33,6 +33,7 @@ export function WordToPdfTool() {
     if (!validation.valid) {
       setError(validation.error || 'Invalid file');
       setState('error');
+      setSelectedFile(null);
       return;
     }
 
@@ -51,6 +52,7 @@ export function WordToPdfTool() {
     try {
       setState('uploading');
       setProgress(0);
+      setError(null);
 
       // Convert the file
       const pdfBlob = await convertWordToPdf(selectedFile, actor, (p) => {
@@ -74,9 +76,24 @@ export function WordToPdfTool() {
       setProgress(100);
     } catch (err: any) {
       console.error('Conversion error:', err);
-      setError(err.message || 'Failed to convert Word document to PDF');
+      const errorMessage = err.message || 'Failed to convert Word document to PDF';
+      setError(errorMessage);
       setState('error');
+      setProgress(0);
     }
+  };
+
+  const handleRetry = async () => {
+    // Retry with the same file without requiring re-upload
+    if (!selectedFile) {
+      setError('No file available to retry. Please select a file again.');
+      setState('error');
+      return;
+    }
+
+    // Reset error and retry conversion
+    setError(null);
+    await handleConvert();
   };
 
   const handleReset = () => {
@@ -127,7 +144,11 @@ export function WordToPdfTool() {
 
       {/* Error State */}
       {state === 'error' && error && (
-        <WordToPdfErrorCard error={error} onTryAgain={handleReset} />
+        <WordToPdfErrorCard 
+          error={error} 
+          onRetry={selectedFile ? handleRetry : undefined}
+          onStartOver={handleReset} 
+        />
       )}
     </div>
   );

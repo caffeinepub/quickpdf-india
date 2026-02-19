@@ -5,6 +5,7 @@ import { RelatedToolsLinks } from '@/components/seo/RelatedToolsLinks';
 import { ToolFaq } from '@/components/faq/ToolFaq';
 import { ToolPageShell } from '@/components/tools/ToolPageShell';
 import { useToolJob } from '@/hooks/useToolJob';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { imageToPdfProcessor } from '@/components/tools/processors/pdf';
 import { normalizeToolError } from '@/components/tools/toolError';
 import { ImageToPdfOptions, ImageToPdfConfig } from '@/components/tools/pdf/ImageToPdfOptions';
@@ -12,6 +13,7 @@ import { ToolPrimaryActionButton } from '@/components/tools/ToolPrimaryActionBut
 import { FileText } from 'lucide-react';
 
 export default function ImageToPdfPage() {
+  useScrollToTop();
   const job = useToolJob();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [config, setConfig] = useState<ImageToPdfConfig>({

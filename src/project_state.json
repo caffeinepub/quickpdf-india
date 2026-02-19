@@ -1,29 +1,51 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
+  "summary": "Document conversion tool with multiple format support including Word to PDF conversion",
+  "architectural_notes": [
+    "Word to PDF conversion supports both .doc and .docx formats",
+    "PDF conversion maintains document formatting",
+    "Conversion includes error handling with retry functionality",
+    "File download mechanism for converted PDFs"
+  ],
   "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-update-the-image-resize-mode-tabs-so-that-the-target-size-tab-uses-a-different-background-color-styling-than-the-by-pixels-and-by-percentage-tabs-especially-for-the-active-state-while-keeping-the-tab-labels-as-by-pixels-by-percentage-and-target-size",
-      "title": "Update the Image Resize mode tabs so that the \"Target Size\" tab uses a different background color styling than the \"By Pixels\" and \"By Percentage\" tabs (especially for the active state), while keeping the tab labels as \"By Pixels\", \"By Percentage\", and \"Target Size\".",
+      "id": "feature-rebuild-the-word-to-pdf-conversion-logic-to-properly-convert-doc-and-docx-files-to-pdf-format-with-maintained-formatting",
+      "title": "Rebuild the Word to PDF conversion logic to properly convert .doc and .docx files to PDF format with maintained formatting",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
-    }
-  ],
-  "new_feature_requests": [
+    },
     {
-      "id": "AR-1",
-      "summary": "Update UI for Target Size controls: add/adjust 'By Pixels' and 'By Percentage' options and change the Target Size button background color",
-      "reqIds": [],
-      "status": "pending"
+      "id": "feature-ensure-the-converted-pdf-file-downloads-properly-to-the-user-s-device-after-successful-conversion",
+      "title": "Ensure the converted PDF file downloads properly to the user's device after successful conversion",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-error-handling-for-conversion-failures-with-user-friendly-error-messages",
+      "title": "Add comprehensive error handling for conversion failures with user-friendly error messages",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-retry-button-that-allows-users-to-attempt-conversion-again-after-an-error-without-re-uploading-the-file",
+      "title": "Add a retry button that allows users to attempt conversion again after an error without re-uploading the file",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
     }
   ],
-  "projectName": "Resize Image Tool",
+  "new_feature_requests": [],
+  "projectName": "Fix Word to PDF conversion feature",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -5,6 +5,7 @@ import { RelatedToolsLinks } from '@/components/seo/RelatedToolsLinks';
 import { ToolFaq } from '@/components/faq/ToolFaq';
 import { ToolPageShell } from '@/components/tools/ToolPageShell';
 import { useToolJob } from '@/hooks/useToolJob';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { addWatermarkProcessor } from '@/components/tools/processors/pdf';
 import { normalizeToolError } from '@/components/tools/toolError';
 import { WatermarkOptions, WatermarkConfig } from '@/components/tools/pdf/WatermarkOptions';
@@ -13,6 +14,7 @@ import { ToolPrimaryActionButton } from '@/components/tools/ToolPrimaryActionBut
 import { Droplet } from 'lucide-react';
 
 export default function AddWatermarkPage() {
+  useScrollToTop();
   const job = useToolJob();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [watermarkConfig, setWatermarkConfig] = useState<WatermarkConfig>({

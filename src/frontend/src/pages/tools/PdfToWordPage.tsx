@@ -5,6 +5,7 @@ import { RelatedToolsLinks } from '@/components/seo/RelatedToolsLinks';
 import { ToolFaq } from '@/components/faq/ToolFaq';
 import { ToolPageShell } from '@/components/tools/ToolPageShell';
 import { useToolJob } from '@/hooks/useToolJob';
+import { useScrollToTop } from '@/hooks/useScrollToTop';
 import { pdfToWordProcessor } from '@/components/tools/processors/conversion';
 import { normalizeToolError } from '@/components/tools/toolError';
 import { ToolPrimaryActionButton } from '@/components/tools/ToolPrimaryActionButton';
@@ -12,6 +13,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info, FileText } from 'lucide-react';
 
 export default function PdfToWordPage() {
+  useScrollToTop();
   const job = useToolJob();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
