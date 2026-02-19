@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Update the watermark tool sliders to use green color styling.
+**Goal:** Create and integrate a modern logo for The Bharat PDF with green theme and minimal SaaS style.
 
 **Planned changes:**
-- Change the opacity slider color to green in the watermark options component
-- Change the font size slider color to green in the watermark options component
-- Change the rotation slider color to green in the watermark options component
+- Generate a modern header logo with green color, PDF icon element, and clean sans-serif font
+- Create a favicon version optimized for small sizes
+- Replace text branding in Navbar with the new logo image
+- Update index.html to reference the new favicon
 
-**User-visible outcome:** Users will see green-styled sliders for opacity, font size, and rotation controls in the watermark tool, matching the site's green theme.
+**User-visible outcome:** The website displays a professional logo in the header and browser tab instead of text-based branding, maintaining the existing green theme and UI design.

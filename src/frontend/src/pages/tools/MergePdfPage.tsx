@@ -42,7 +42,7 @@ export function MergePdfPage() {
   return (
     <>
       <Seo
-        title="Merge PDF Files Online - Combine Multiple PDFs"
+        title="Merge PDF Files Online - The Bharat PDF"
         description="Combine multiple PDF files into one document. Simple, fast, and secure. All processing happens in your browser - no uploads required."
       />
 

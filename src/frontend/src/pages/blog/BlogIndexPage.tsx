@@ -9,7 +9,7 @@ export default function BlogIndexPage() {
   return (
     <>
       <Seo
-        title="Blog - PDF & Image Tips"
+        title="Blog - The Bharat PDF"
         description="Learn tips and tricks for working with PDFs and images. Guides, tutorials, and best practices for document management."
       />
       <div className="container py-12">

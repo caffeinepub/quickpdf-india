@@ -1,50 +1,78 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update watermark slider colors to green",
+  "title": "Create modern logo for The Bharat PDF",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Change the opacity slider color to green in the watermark options component",
+      "summary": "Generate a modern, clean logo image for 'The Bharat PDF' with green as the primary color, white/light background support, minimal SaaS style, incorporating a simple PDF/document/file icon element, using a smooth modern font with flat design (no heavy gradients), optimized for header display at desktop and mobile sizes",
       "acceptanceCriteria": [
-        "The opacity slider in the watermark tool displays with green color styling",
-        "The green styling is consistent with the site's green theme"
+        "Logo displays 'The Bharat PDF' text clearly",
+        "Primary color is green matching the existing theme",
+        "Design is minimal and professional in SaaS style",
+        "Includes a simple PDF/document/file icon element",
+        "Uses a smooth, modern font",
+        "Flat design without heavy gradients",
+        "Looks good on white or light backgrounds",
+        "Suitable for both desktop and mobile header display"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/tools/pdf/WatermarkOptions.tsx",
-          "operation": "modify",
-          "description": "Update the opacity slider component to use green color styling by applying the 'slider-green' CSS class to the Slider component. Locate the opacity control section and add className='slider-green' to the Slider component that controls watermark opacity."
+          "path": "frontend/public/assets/generated/logo-header.dim_400x80.png",
+          "operation": "create",
+          "description": "Create the main logo image file with 'The Bharat PDF' text in a smooth modern sans-serif font, green as the primary color on transparent or white background, incorporating a simple PDF/document/file icon element in a minimal SaaS style with flat design. The image dimensions are 400x80 pixels, optimized for website header display at both desktop and mobile viewports. This is a generated image asset that will be referenced by the Navbar component."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Change the font size slider color to green in the watermark options component",
+      "summary": "Generate a favicon version of The Bharat PDF logo optimized for small sizes (16x16, 32x32, 48x48 pixels) with the same green theme and recognizable PDF/document icon element",
       "acceptanceCriteria": [
-        "The font size slider in the watermark tool displays with green color styling",
-        "The green styling matches the opacity slider styling"
+        "Favicon is recognizable at small sizes (16x16, 32x32, 48x48)",
+        "Maintains green color theme",
+        "Icon element is clear and identifiable",
+        "Works on both light and dark browser UI backgrounds"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/tools/pdf/WatermarkOptions.tsx",
-          "operation": "modify",
-          "description": "Update the font size slider component to use green color styling by applying the 'slider-green' CSS class to the Slider component. Locate the font size control section and add className='slider-green' to the Slider component that controls watermark font size."
+          "path": "frontend/public/assets/generated/favicon.dim_48x48.png",
+          "operation": "create",
+          "description": "Create the favicon image file featuring a simplified version of The Bharat PDF logo optimized for small display sizes. The design uses green as the primary color and focuses on a recognizable PDF/document icon element that remains clear and identifiable at 48x48 pixels. The icon should work well on both light and dark browser UI backgrounds. This is a generated image asset that will be referenced in the HTML head section."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Change the rotation slider color to green in the watermark options component",
+      "summary": "Update the Navbar component to display the new logo image in place of the current text-based branding, ensuring it blends perfectly with the existing UI without modifying any layout, functionality, or navigation structure",
       "acceptanceCriteria": [
-        "The rotation slider in the watermark tool displays with green color styling",
-        "The green styling is consistent with the other watermark sliders"
+        "Logo image replaces text branding in Navbar",
+        "Logo scales appropriately for desktop and mobile viewports",
+        "No changes to navigation links, menu structure, or functionality",
+        "Logo maintains proper spacing and alignment with existing elements",
+        "Green theme consistency is preserved"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/tools/pdf/WatermarkOptions.tsx",
+          "path": "frontend/src/components/layout/Navbar.tsx",
           "operation": "modify",
-          "description": "Update the rotation slider component to use green color styling by applying the 'slider-green' CSS class to the Slider component. Locate the rotation control section and add className='slider-green' to the Slider component that controls watermark rotation angle."
+          "description": "Replace the current text-based branding with an img element that references the generated logo image at frontend/public/assets/generated/logo-header.dim_400x80.png. The logo should maintain proper spacing and alignment with existing navigation elements, scale appropriately for both desktop and mobile viewports, and preserve all current navigation functionality and layout structure. No changes to navigation links, menu structure, dropdown behavior, or the 'Get Started' button. The logo must blend seamlessly with the existing green theme and UI design."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Update frontend/index.html to reference the new favicon files, replacing any existing favicon references without modifying other meta tags or HTML structure",
+      "acceptanceCriteria": [
+        "Favicon link tags point to new favicon files",
+        "Multiple favicon sizes are referenced (16x16, 32x32, 48x48 or equivalent)",
+        "No changes to page title, meta tags, or other HTML elements",
+        "Favicon displays correctly in browser tabs"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Update or add favicon link tags in the HTML head section to reference the new favicon file at frontend/public/assets/generated/favicon.dim_48x48.png. Include appropriate link tags for multiple sizes (16x16, 32x32, 48x48) using the same source image, and ensure proper rel attributes (icon, shortcut icon, apple-touch-icon as appropriate). Do not modify the page title, meta tags, or any other HTML structure. The favicon should display correctly in browser tabs across different browsers and devices."
         }
       ]
     }

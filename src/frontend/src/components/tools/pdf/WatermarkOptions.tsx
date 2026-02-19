@@ -52,7 +52,7 @@ export function WatermarkOptions({ value, onChange }: WatermarkOptionsProps) {
         <CardTitle>Watermark Settings</CardTitle>
         <CardDescription>Customize your watermark appearance</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-8">
         {/* Text Input */}
         <div className="space-y-2">
           <Label htmlFor="watermark-text">Watermark Text</Label>
@@ -104,54 +104,78 @@ export function WatermarkOptions({ value, onChange }: WatermarkOptionsProps) {
         </div>
 
         {/* Opacity Slider */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label htmlFor="opacity">Opacity</Label>
-            <span className="text-sm text-muted-foreground">{Math.round(value.opacity * 100)}%</span>
+            <Label htmlFor="opacity" className="text-base font-medium">Opacity</Label>
+            <span className="text-base font-semibold text-[#22c55e] bg-[#22c55e]/10 px-3 py-1 rounded-md">
+              {Math.round(value.opacity * 100)}%
+            </span>
           </div>
-          <Slider
-            id="opacity"
-            min={0}
-            max={100}
-            step={5}
-            value={[value.opacity * 100]}
-            onValueChange={handleOpacityChange}
-            className="watermark-slider"
-          />
+          <div className="px-1 py-2">
+            <Slider
+              id="opacity"
+              min={0}
+              max={100}
+              step={5}
+              value={[value.opacity * 100]}
+              onValueChange={handleOpacityChange}
+              className="watermark-slider"
+            />
+          </div>
+          <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
+            <span>0%</span>
+            <span>100%</span>
+          </div>
         </div>
 
         {/* Font Size Slider */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label htmlFor="font-size">Font Size</Label>
-            <span className="text-sm text-muted-foreground">{value.fontSize}pt</span>
+            <Label htmlFor="font-size" className="text-base font-medium">Font Size</Label>
+            <span className="text-base font-semibold text-[#22c55e] bg-[#22c55e]/10 px-3 py-1 rounded-md">
+              {value.fontSize}pt
+            </span>
           </div>
-          <Slider
-            id="font-size"
-            min={12}
-            max={120}
-            step={4}
-            value={[value.fontSize]}
-            onValueChange={handleFontSizeChange}
-            className="watermark-slider"
-          />
+          <div className="px-1 py-2">
+            <Slider
+              id="font-size"
+              min={10}
+              max={100}
+              step={2}
+              value={[value.fontSize]}
+              onValueChange={handleFontSizeChange}
+              className="watermark-slider"
+            />
+          </div>
+          <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
+            <span>10pt</span>
+            <span>100pt</span>
+          </div>
         </div>
 
         {/* Rotation Slider */}
-        <div className="space-y-2">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label htmlFor="rotation">Rotation</Label>
-            <span className="text-sm text-muted-foreground">{value.rotation}°</span>
+            <Label htmlFor="rotation" className="text-base font-medium">Rotation</Label>
+            <span className="text-base font-semibold text-[#22c55e] bg-[#22c55e]/10 px-3 py-1 rounded-md">
+              {value.rotation}°
+            </span>
           </div>
-          <Slider
-            id="rotation"
-            min={-180}
-            max={180}
-            step={15}
-            value={[value.rotation]}
-            onValueChange={handleRotationChange}
-            className="watermark-slider"
-          />
+          <div className="px-1 py-2">
+            <Slider
+              id="rotation"
+              min={-180}
+              max={180}
+              step={15}
+              value={[value.rotation]}
+              onValueChange={handleRotationChange}
+              className="watermark-slider"
+            />
+          </div>
+          <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
+            <span>-180°</span>
+            <span>180°</span>
+          </div>
         </div>
       </CardContent>
     </Card>

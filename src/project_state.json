@@ -1,44 +1,58 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
+  "summary": "The Bharat PDF - A PDF tools website",
+  "architectural_notes": [
+    "Green & white color theme for branding",
+    "Logo must work across desktop/mobile header and favicon sizes",
+    "Flat design aesthetic with minimal SaaS style"
+  ],
   "known_issues": [],
   "isFixRequest": false,
-  "existing_features": [],
-  "new_feature_requests": [
+  "imageRequirements": "## Required Images\n- Modern, clean logo for 'The Bharat PDF' with green primary color on transparent/white background, minimal SaaS style, incorporating a simple PDF document icon, smooth modern sans-serif font, flat design without gradients, horizontal layout suitable for website header (logo-header.dim_400x80.png)\n- Favicon version of The Bharat PDF logo optimized for small display, simple PDF document icon in green, recognizable at tiny sizes, square format (favicon.dim_48x48.png)",
+  "existing_features": [
     {
-      "id": "AR-1",
-      "summary": "Change watermark tool sliders (opacity, font size, rotation) to green color",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Change the opacity slider color to green in the watermark options component",
+      "id": "feature-generate-a-modern-clean-logo-image-for-the-bharat-pdf-with-green-as-the-primary-color-white-light-background-support-minimal-saas-style-incorporating-a-simple-pdf-document-file-icon-element-using-a-smooth-modern-font-with-flat-design-no-heavy-gradients-optimized-for-header-display-at-desktop-and-mobile-sizes",
+      "title": "Generate a modern, clean logo image for 'The Bharat PDF' with green as the primary color, white/light background support, minimal SaaS style, incorporating a simple PDF/document/file icon element, using a smooth modern font with flat design (no heavy gradients), optimized for header display at desktop and mobile sizes",
       "reqIds": [
         "REQ-1"
       ],
-      "status": "pending"
+      "version": 1
     },
     {
-      "id": "AR-3",
-      "summary": "Change the font size slider color to green in the watermark options component",
+      "id": "feature-generate-a-favicon-version-of-the-bharat-pdf-logo-optimized-for-small-sizes-16x16-32x32-48x48-pixels-with-the-same-green-theme-and-recognizable-pdf-document-icon-element",
+      "title": "Generate a favicon version of The Bharat PDF logo optimized for small sizes (16x16, 32x32, 48x48 pixels) with the same green theme and recognizable PDF/document icon element",
       "reqIds": [
         "REQ-2"
       ],
-      "status": "pending"
+      "version": 1
     },
     {
-      "id": "AR-4",
-      "summary": "Change the rotation slider color to green in the watermark options component",
+      "id": "feature-update-the-navbar-component-to-display-the-new-logo-image-in-place-of-the-current-text-based-branding-ensuring-it-blends-perfectly-with-the-existing-ui-without-modifying-any-layout-functionality-or-navigation-structure",
+      "title": "Update the Navbar component to display the new logo image in place of the current text-based branding, ensuring it blends perfectly with the existing UI without modifying any layout, functionality, or navigation structure",
       "reqIds": [
         "REQ-3"
       ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-index-html-to-reference-the-new-favicon-files-replacing-any-existing-favicon-references-without-modifying-other-meta-tags-or-html-structure",
+      "title": "Update frontend/index.html to reference the new favicon files, replacing any existing favicon references without modifying other meta tags or HTML structure",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create a modern, clean logo for The Bharat PDF with green & white theme, minimal SaaS style, PDF/document icon, suitable for header and favicon",
+      "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Update watermark slider colors to green",
+  "projectName": "The Bharat PDF",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

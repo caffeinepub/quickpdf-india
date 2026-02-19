@@ -21,6 +21,12 @@ import PdfToPowerpointPage from './pages/tools/PdfToPowerpointPage';
 import BlogIndexPage from './pages/blog/BlogIndexPage';
 import HowToCompressPdfOnlinePage from './pages/blog/HowToCompressPdfOnlinePage';
 import ResizeImageUnder50KbPage from './pages/blog/ResizeImageUnder50KbPage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsPage from './pages/TermsPage';
+import DisclaimerPage from './pages/DisclaimerPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 const rootRoute = createRootRoute({
   component: SiteLayout,
@@ -152,6 +158,42 @@ const resizeImageUnder50KbRoute = createRoute({
   component: ResizeImageUnder50KbPage,
 });
 
+const aboutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/about',
+  component: AboutPage,
+});
+
+const contactRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/contact',
+  component: ContactPage,
+});
+
+const privacyPolicyRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/privacy-policy',
+  component: PrivacyPolicyPage,
+});
+
+const termsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/terms',
+  component: TermsPage,
+});
+
+const disclaimerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/disclaimer',
+  component: DisclaimerPage,
+});
+
+const notFoundRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '*',
+  component: NotFoundPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   mergePdfRoute,
@@ -174,6 +216,12 @@ const routeTree = rootRoute.addChildren([
   blogIndexRoute,
   howToCompressPdfRoute,
   resizeImageUnder50KbRoute,
+  aboutRoute,
+  contactRoute,
+  privacyPolicyRoute,
+  termsRoute,
+  disclaimerRoute,
+  notFoundRoute,
 ]);
 
 const router = createRouter({ routeTree });

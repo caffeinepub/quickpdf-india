@@ -120,13 +120,55 @@
     @apply border-l-4 border-primary pl-4 italic my-4;
   }
 
-  /* Watermark slider styling with green progress bar */
-  .watermark-slider [role="slider"] {
-    @apply bg-primary border-primary;
+  /* Enhanced watermark slider styling with green theme */
+  .watermark-slider {
+    @apply relative;
   }
-  
+
+  /* Slider track container */
+  .watermark-slider [data-orientation="horizontal"] {
+    @apply relative h-3 w-full touch-none select-none;
+  }
+
+  /* Inactive track (background) - light grey */
   .watermark-slider [data-orientation="horizontal"] > span:first-child {
-    @apply bg-primary;
+    @apply relative h-3 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700;
+  }
+
+  /* Active track (filled portion) - green */
+  .watermark-slider [data-orientation="horizontal"] > span:first-child > span {
+    @apply absolute h-full bg-[#22c55e] transition-all;
+  }
+
+  /* Slider thumb - green with shadow and larger size */
+  .watermark-slider [role="slider"] {
+    @apply block h-6 w-6 rounded-full border-2 border-[#22c55e] bg-[#22c55e] shadow-lg ring-offset-background transition-all;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22c55e] focus-visible:ring-offset-2;
+    @apply hover:scale-110 hover:shadow-xl;
+    @apply active:scale-105 active:shadow-2xl;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+    /* Increase touch target for mobile */
+    @apply touch-manipulation;
+  }
+
+  /* Add smooth animation to slider interactions */
+  .watermark-slider [role="slider"]:active {
+    @apply ring-2 ring-[#22c55e] ring-offset-2;
+  }
+
+  /* Ensure proper spacing and touch area on mobile */
+  @media (max-width: 640px) {
+    .watermark-slider [role="slider"] {
+      @apply h-7 w-7;
+    }
+    
+    .watermark-slider [data-orientation="horizontal"] {
+      @apply h-4;
+    }
+    
+    .watermark-slider [data-orientation="horizontal"] > span:first-child {
+      @apply h-4;
+    }
   }
 }
 

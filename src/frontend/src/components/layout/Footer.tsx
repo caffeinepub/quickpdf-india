@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { Heart, Copy, Check } from 'lucide-react';
 import { useState } from 'react';
+import { AdSlot } from '../ads/AdSlot';
 
 export function Footer() {
   const [copied, setCopied] = useState(false);
@@ -41,11 +42,16 @@ export function Footer() {
   };
 
   const currentYear = new Date().getFullYear();
-  const appIdentifier = encodeURIComponent(window.location.hostname || 'quickpdf-tools');
+  const appIdentifier = encodeURIComponent(window.location.hostname || 'the-bharat-pdf');
 
   return (
     <footer className="border-t border-border bg-card/30 py-12">
       <div className="container">
+        {/* Footer Banner Ad */}
+        <div className="mb-16">
+          <AdSlot variant="footer-banner" />
+        </div>
+
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* PDF Tools */}
           <div>
@@ -204,10 +210,50 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* About */}
+          {/* Legal & Information */}
           <div>
-            <h3 className="mb-4 font-semibold">About</h3>
+            <h3 className="mb-4 font-semibold">Legal & Information</h3>
             <ul className="space-y-2">
+              <li>
+                <Link
+                  to="/about"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/contact"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/privacy-policy"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/terms"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Terms & Conditions
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/disclaimer"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  Disclaimer
+                </Link>
+              </li>
               <li>
                 <Link
                   to="/blog"
@@ -249,7 +295,7 @@ export function Footer() {
 
         {/* Copyright and Attribution */}
         <div className="mt-6 flex flex-col items-center justify-center gap-2 text-center text-sm text-muted-foreground sm:flex-row sm:gap-4">
-          <p>© {currentYear} QuickPDF Tools. All rights reserved.</p>
+          <p>© {currentYear} The Bharat PDF. All rights reserved.</p>
           <span className="hidden sm:inline">•</span>
           <p className="flex items-center gap-1">
             Built with <Heart className="h-4 w-4 fill-red-500 text-red-500" /> using{' '}
